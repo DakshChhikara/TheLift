@@ -1,12 +1,13 @@
-import "./Home.css";
+import "./home.css";
 
 function Home() {
   return (
-    <main className="home-page">
+    <div className="home">
 
-      {/* NAVBAR */}
+      {/* ================= NAVBAR ================= */}
+
       <nav className="navbar">
-        <div className="nav-logo">
+        <div className="logo">
           THE<span>LIFT</span>
         </div>
 
@@ -17,24 +18,25 @@ function Home() {
           <a href="#contact">Contact</a>
         </div>
 
-        <button className="nav-button">
-          Join The Lift
+        <button className="nav-btn">
+          Join The Lift <span>↗</span>
         </button>
       </nav>
 
 
-      {/* HERO */}
-      <section className="hero-section">
+      {/* ================= HERO / EXPERIENCE ================= */}
 
-        <div className="hero-content">
+      <section className="hero" id="experience">
 
-          <div className="hero-badge">
+        <div className="hero-left">
+
+          <div className="live-badge">
             <span></span>
             LIVE GYM EXPERIENCE
           </div>
 
-          <p className="hero-eyebrow">
-            TRAINING / PERFORMANCE / COMMUNITY
+          <p className="hero-label">
+            TRAINING • PERFORMANCE • COMMUNITY
           </p>
 
           <h1>
@@ -49,11 +51,11 @@ function Home() {
           </p>
 
           <div className="hero-buttons">
-            <button className="primary-button">
-              Book a Free Trial <span>→</span>
+            <button className="primary-btn">
+              Book a Free Trial →
             </button>
 
-            <button className="secondary-button">
+            <button className="secondary-btn">
               Explore The Lift
             </button>
           </div>
@@ -61,36 +63,41 @@ function Home() {
         </div>
 
 
-        {/* LIVE CARD */}
-        <div className="gym-card">
+        {/* GYM CAPACITY CARD */}
 
-          <div className="card-top">
+        <div className="capacity-card">
+
+          <div className="capacity-top">
+
             <div>
-              <div className="live-status">
-                <span></span>
-                LIVE NOW
-              </div>
+              <p className="live-text">
+                <span></span> LIVE NOW
+              </p>
 
               <h3>Gym Capacity</h3>
             </div>
 
             <p>Updated just now</p>
+
           </div>
 
-          <div className="capacity">
-            <strong>47</strong>
-            <span>/80 people</span>
+
+          <div className="capacity-number">
+            47 <small>/80 people</small>
           </div>
+
 
           <div className="capacity-bar">
             <div></div>
           </div>
 
-          <p className="spots">
+
+          <p className="available">
             33 spots available right now
           </p>
 
-          <div className="gym-stats">
+
+          <div className="capacity-grid">
 
             <div>
               <strong>8/10</strong>
@@ -119,121 +126,260 @@ function Home() {
       </section>
 
 
-      {/* STATS */}
-      <section className="stats-section">
+      {/* ================= QUICK FEATURES ================= */}
 
-        <div>
-          <strong>500+</strong>
-          <span>ACTIVE MEMBERS</span>
+      <section className="feature-strip">
+
+        <div className="feature">
+
+          <div className="feature-icon">
+            ◇
+          </div>
+
+          <div>
+            <h3>Premium Equipment</h3>
+            <p>Train with quality equipment.</p>
+          </div>
+
         </div>
 
-        <div>
-          <strong>12</strong>
-          <span>EXPERT TRAINERS</span>
+
+        <div className="feature">
+
+          <div className="feature-icon">
+            □
+          </div>
+
+          <div>
+            <h3>Smart Workouts</h3>
+            <p>Structured programs for every goal.</p>
+          </div>
+
         </div>
 
-        <div>
-          <strong>50+</strong>
-          <span>EQUIPMENT</span>
-        </div>
 
-        <div>
-          <strong>4.9 ★</strong>
-          <span>MEMBER RATING</span>
+        <div className="feature">
+
+          <div className="feature-icon">
+            ♧
+          </div>
+
+          <div>
+            <h3>Expert Guidance</h3>
+            <p>Get better with the right guidance.</p>
+          </div>
+
         </div>
 
       </section>
 
 
-      {/* ADMIN / GYM MANAGEMENT */}
-      <section className="dashboard-section" id="features">
+      {/* ================= MEMBER FEATURES ================= */}
 
-        <div className="dashboard-copy">
+      <section
+        className="member-features"
+        id="features"
+      >
+
+        <div className="section-heading">
 
           <p className="section-label">
-            FOR THE LIFT TEAM
+            BUILT FOR YOUR PROGRESS
           </p>
 
           <h2>
-            One dashboard.
+            Everything you need
             <br />
-            Complete control.
+            to <span>level up.</span>
           </h2>
 
           <p>
-            A simple view of what matters to the gym team —
-            members, attendance, leads, renewals and performance.
+            Your fitness journey, organized in one place.
+            Know what your body needs and train with purpose.
           </p>
-
-          <ul>
-            <li>Member & membership management</li>
-            <li>Attendance and live capacity</li>
-            <li>Expiring membership alerts</li>
-            <li>Lead & trial tracking</li>
-            <li>Business performance overview</li>
-          </ul>
-
-          <button className="primary-button">
-            Request a Demo
-          </button>
 
         </div>
 
 
-        <div className="dashboard-card">
+        <div className="member-feature-grid">
 
-          <div className="dashboard-header">
-            <h3>The Lift Dashboard</h3>
 
-            <span>
-              <i></i>
-              LIVE
-            </span>
-          </div>
+          {/* NUTRITION */}
 
-          <div className="dashboard-grid">
+          <div className="member-feature-card large">
 
-            <div>
-              <span>Members</span>
-              <strong>524</strong>
+            <div className="feature-card-top">
+
+              <div className="big-icon">
+                🥗
+              </div>
+
+              <span>01</span>
+
             </div>
 
-            <div>
-              <span>Today Attendance</span>
-              <strong>183</strong>
-            </div>
+            <h3>
+              Personalized Nutrition Plan
+            </h3>
 
-            <div>
-              <span>Live Inside</span>
-              <strong>47</strong>
-            </div>
+            <p>
+              Get a nutrition plan based on your body,
+              lifestyle, fitness goal and daily calorie needs.
+            </p>
 
-            <div>
-              <span>New Leads</span>
-              <strong>28</strong>
-            </div>
-
-            <div>
-              <span>Renewals Due</span>
-              <strong>16</strong>
-            </div>
-
-            <div>
-              <span>Conversion</span>
-              <strong>38%</strong>
+            <div className="feature-link">
+              Explore Nutrition →
             </div>
 
           </div>
 
-          <div className="chart">
 
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div className="active"></div>
-            <div></div>
+          {/* BMI */}
+
+          <div className="member-feature-card">
+
+            <div className="feature-card-top">
+
+              <div className="big-icon">
+                ◉
+              </div>
+
+              <span>02</span>
+
+            </div>
+
+            <h3>
+              BMI Calculator
+            </h3>
+
+            <p>
+              Understand your current body status
+              using your height and weight.
+            </p>
+
+            <div className="feature-link">
+              Calculate BMI →
+            </div>
+
+          </div>
+
+
+          {/* CALORIES */}
+
+          <div className="member-feature-card">
+
+            <div className="feature-card-top">
+
+              <div className="big-icon">
+                🔥
+              </div>
+
+              <span>03</span>
+
+            </div>
+
+            <h3>
+              Daily Calories
+            </h3>
+
+            <p>
+              Know how many calories you need every day
+              according to your activity and goal.
+            </p>
+
+            <div className="feature-link">
+              Calculate Calories →
+            </div>
+
+          </div>
+
+
+          {/* TARGET WEIGHT */}
+
+          <div className="member-feature-card">
+
+            <div className="feature-card-top">
+
+              <div className="big-icon">
+                🎯
+              </div>
+
+              <span>04</span>
+
+            </div>
+
+            <h3>
+              Target Weight
+            </h3>
+
+            <p>
+              Set your target weight and track how far
+              you are from your goal.
+            </p>
+
+            <div className="feature-link">
+              Set Your Goal →
+            </div>
+
+          </div>
+
+
+          {/* WORKOUT */}
+
+          <div className="member-feature-card">
+
+            <div className="feature-card-top">
+
+              <div className="big-icon">
+                💪
+              </div>
+
+              <span>05</span>
+
+            </div>
+
+            <h3>
+              Workout Plans
+            </h3>
+
+            <p>
+              Follow structured workouts designed
+              around your fitness level and goals.
+            </p>
+
+            <div className="feature-link">
+              View Workouts →
+            </div>
+
+          </div>
+
+
+          {/* PROGRESS */}
+
+          <div className="member-feature-card">
+
+            <div className="feature-card-top">
+
+              <div className="big-icon">
+                ↗
+              </div>
+
+              <span>06</span>
+
+            </div>
+
+            <h3>
+              Progress Tracking
+            </h3>
+
+            <p>
+              Track weight, measurements, workouts
+              and your overall progress over time.
+            </p>
+
+            <div className="feature-link">
+              Track Progress →
+            </div>
 
           </div>
 
@@ -242,8 +388,12 @@ function Home() {
       </section>
 
 
-      {/* MEMBERSHIP */}
-      <section className="membership-section" id="membership">
+      {/* ================= MEMBERSHIP ================= */}
+
+      <section
+        className="membership-section"
+        id="membership"
+      >
 
         <p className="section-label">
           MEMBERSHIP
@@ -261,27 +411,33 @@ function Home() {
         </p>
 
 
-        <div className="plans">
+        <div className="membership-grid">
+
 
           {/* STARTER */}
-          <div className="plan-card">
 
-            <h3>Starter</h3>
+          <div className="membership-card">
+
+            <h3>
+              Starter
+            </h3>
 
             <div className="price">
               ₹1,999 <span>/mo</span>
             </div>
 
-            <p>For getting started.</p>
+            <p>
+              For getting started.
+            </p>
 
             <ul>
-              <li>Full gym access</li>
-              <li>QR exercise guides</li>
-              <li>Progress tracking</li>
-              <li>AI fitness assistant</li>
+              <li>✓ Full gym access</li>
+              <li>✓ QR exercise guides</li>
+              <li>✓ Progress tracking</li>
+              <li>✓ AI fitness assistant</li>
             </ul>
 
-            <button className="plan-button">
+            <button className="secondary-btn">
               Choose Starter
             </button>
 
@@ -289,28 +445,33 @@ function Home() {
 
 
           {/* PRO */}
-          <div className="plan-card popular">
+
+          <div className="membership-card popular">
 
             <div className="popular-badge">
               MOST POPULAR
             </div>
 
-            <h3>Pro</h3>
+            <h3>
+              Pro
+            </h3>
 
             <div className="price">
               ₹2,999 <span>/mo</span>
             </div>
 
-            <p>For serious progress.</p>
+            <p>
+              For serious progress.
+            </p>
 
             <ul>
-              <li>Everything in Starter</li>
-              <li>Trainer guidance</li>
-              <li>Nutrition guidance</li>
-              <li>Advanced progress tracking</li>
+              <li>✓ Everything in Starter</li>
+              <li>✓ Trainer guidance</li>
+              <li>✓ Nutrition guidance</li>
+              <li>✓ Advanced progress tracking</li>
             </ul>
 
-            <button className="primary-button">
+            <button className="primary-btn">
               Choose Pro
             </button>
 
@@ -318,24 +479,29 @@ function Home() {
 
 
           {/* ELITE */}
-          <div className="plan-card">
 
-            <h3>Elite</h3>
+          <div className="membership-card">
+
+            <h3>
+              Elite
+            </h3>
 
             <div className="price">
               ₹4,999 <span>/mo</span>
             </div>
 
-            <p>Maximum support.</p>
+            <p>
+              Maximum support.
+            </p>
 
             <ul>
-              <li>Everything in Pro</li>
-              <li>Personal training</li>
-              <li>Custom workout planning</li>
-              <li>Priority support</li>
+              <li>✓ Everything in Pro</li>
+              <li>✓ Personal training</li>
+              <li>✓ Custom workout planning</li>
+              <li>✓ Priority support</li>
             </ul>
 
-            <button className="plan-button">
+            <button className="secondary-btn">
               Choose Elite
             </button>
 
@@ -346,24 +512,48 @@ function Home() {
       </section>
 
 
-      {/* FOOTER */}
-      <footer id="contact">
+      {/* ================= CONTACT ================= */}
 
-        <div className="footer-logo">
+      <section
+        className="contact-section"
+        id="contact"
+      >
+
+        <p className="section-label">
+          GET IN TOUCH
+        </p>
+
+        <h2>
+          Ready to
+          <br />
+          <span>train different?</span>
+        </h2>
+
+        <p>
+          Have a question about memberships, training or
+          anything else? Talk to The Lift team.
+        </p>
+
+        <button className="primary-btn">
+          Contact The Lift →
+        </button>
+
+      </section>
+
+
+      {/* ================= FOOTER ================= */}
+
+      <footer>
+        <div>
           THE<span>LIFT</span>
         </div>
 
         <p>
-          TRAIN HARD. LIVE STRONG.
+          © 2026 THE LIFT — POWERED BY FITFLOW
         </p>
-
-        <span>
-          © 2026 The Lift. All rights reserved.
-        </span>
-
       </footer>
 
-    </main>
+    </div>
   );
 }
 

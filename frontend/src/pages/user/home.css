@@ -1,709 +1,760 @@
-/* =========================
-   GLOBAL
-========================= */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
 
-.home-page {
+.home {
   min-height: 100vh;
   background: #080808;
   color: #f5f5f5;
-  font-family: Arial, Helvetica, sans-serif;
   overflow-x: hidden;
-}
-
-.home-page * {
-  box-sizing: border-box;
-}
-
-.home-page button {
-  font-family: inherit;
-  cursor: pointer;
+  font-family: "Manrope", sans-serif;
 }
 
 
-/* =========================
-   NAVBAR
-========================= */
+/* ================= NAVBAR ================= */
 
 .navbar {
-  height: 88px;
-  padding: 0 9.5%;
+  height: 86px;
+  padding: 0 5%;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  border-bottom: 1px solid #222;
-  background: rgba(8, 8, 8, 0.95);
+  border-bottom: 1px solid #202020;
+
+  background: rgba(8, 8, 8, 0.92);
+  backdrop-filter: blur(15px);
 
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
-.nav-logo {
+.logo {
+  font-family: "Manrope", sans-serif;
   font-size: 25px;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: -1.5px;
 }
 
-.nav-logo span {
-  color: #b7ff00;
+.logo span {
+  color: #c8ff00;
 }
 
 .nav-links {
   display: flex;
+  align-items: center;
   gap: 42px;
 }
 
 .nav-links a {
-  color: #c8c8c8;
+  position: relative;
+
+  color: #999;
   text-decoration: none;
-  font-size: 15px;
-  transition: 0.2s;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.25s;
+}
+
+.nav-links a::after {
+  content: "";
+  position: absolute;
+
+  left: 0;
+  bottom: -8px;
+
+  width: 0;
+  height: 2px;
+
+  background: #c8ff00;
+
+  transition: 0.25s;
 }
 
 .nav-links a:hover {
-  color: #b7ff00;
+  color: white;
 }
 
-.nav-button {
-  border: none;
-  background: #b7ff00;
-  color: #080808;
+.nav-links a:hover::after {
+  width: 100%;
+}
 
-  padding: 15px 25px;
+.nav-btn {
+  border: 0;
+  background: #c8ff00;
+  color: #050505;
+
+  padding: 15px 22px;
   border-radius: 9px;
 
-  font-size: 15px;
-  font-weight: 800;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.nav-btn span {
+  margin-left: 5px;
+}
+
+.nav-btn:hover {
+  transform: translateY(-2px);
 }
 
 
-/* =========================
-   HERO
-========================= */
+/* ================= HERO ================= */
 
-.hero-section {
+.hero {
   min-height: 720px;
 
-  padding: 80px 9.5%;
+  padding: 85px 5%;
 
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 80px;
+  grid-template-columns: 1.15fr 0.85fr;
+
+  gap: 70px;
   align-items: center;
 
   background:
     radial-gradient(
-      circle at 75% 30%,
-      rgba(183, 255, 0, 0.12),
-      transparent 32%
+      circle at 75% 35%,
+      rgba(200, 255, 0, 0.09),
+      transparent 35%
     );
 }
 
-.hero-content {
-  max-width: 680px;
+.hero-left {
+  max-width: 760px;
 }
 
-.hero-badge {
+.live-badge {
   display: inline-flex;
   align-items: center;
   gap: 10px;
 
-  padding: 10px 15px;
+  padding: 10px 16px;
 
-  border: 1px solid #333;
+  border: 1px solid #303030;
   border-radius: 30px;
 
-  color: #d0d0d0;
-  font-size: 13px;
-  margin-bottom: 35px;
+  color: #ccc;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  margin-bottom: 45px;
 }
 
-.hero-badge span,
-.live-status span {
+.live-badge span,
+.live-text span {
   width: 8px;
   height: 8px;
+
+  background: #c8ff00;
   border-radius: 50%;
-  background: #b7ff00;
-  box-shadow: 0 0 12px #b7ff00;
+
+  display: inline-block;
+
+  box-shadow: 0 0 12px #c8ff00;
 }
 
-.hero-eyebrow,
+.hero-label,
 .section-label {
-  color: #b7ff00;
-  font-size: 13px;
-  font-weight: 800;
+  color: #c8ff00;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 12px;
+  font-weight: 700;
+
   letter-spacing: 4px;
-  margin-bottom: 25px;
 }
 
-.hero-content h1 {
-  margin: 0;
+.hero h1 {
+  font-family: "Manrope", sans-serif;
 
-  font-size: clamp(80px, 9vw, 150px);
-  line-height: 0.84;
-  letter-spacing: -8px;
+  font-size: clamp(70px, 8vw, 135px);
+  line-height: 0.86;
 
-  font-weight: 950;
+  letter-spacing: -7px;
+
+  margin: 25px 0 35px;
+
+  font-weight: 700;
 }
 
-.hero-content h1 span {
-  color: #b7ff00;
+.hero h1 span {
+  color: #c8ff00;
 }
 
 .hero-description {
-  max-width: 620px;
+  max-width: 680px;
 
-  color: #929292;
-  font-size: 19px;
-  line-height: 1.55;
+  color: #999;
 
-  margin: 38px 0;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 .hero-buttons {
   display: flex;
-  gap: 14px;
+  gap: 15px;
+  margin-top: 35px;
 }
 
-
-/* =========================
-   BUTTONS
-========================= */
-
-.primary-button,
-.secondary-button,
-.plan-button {
+.primary-btn,
+.secondary-btn {
   border-radius: 9px;
 
-  padding: 17px 24px;
+  padding: 17px 25px;
 
-  font-size: 15px;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
   font-weight: 800;
+
+  cursor: pointer;
 
   transition: 0.2s;
 }
 
-.primary-button {
-  background: #b7ff00;
-  color: #080808;
-  border: 1px solid #b7ff00;
+.primary-btn {
+  background: #c8ff00;
+  border: 1px solid #c8ff00;
+  color: #050505;
 }
 
-.primary-button:hover {
+.primary-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(183, 255, 0, 0.18);
 }
 
-.secondary-button,
-.plan-button {
-  background: #111;
-  color: #eee;
+.secondary-btn {
+  background: transparent;
   border: 1px solid #333;
+  color: white;
 }
 
-.secondary-button:hover,
-.plan-button:hover {
-  border-color: #b7ff00;
+.secondary-btn:hover {
+  border-color: #c8ff00;
 }
 
 
-/* =========================
-   GYM CARD
-========================= */
+/* ================= CAPACITY ================= */
 
-.gym-card {
+.capacity-card {
   background: #111;
+
   border: 1px solid #303030;
-  border-radius: 20px;
+  border-radius: 22px;
 
-  padding: 30px;
+  padding: 32px;
 
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
 }
 
-.card-top {
+.capacity-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
 
   border-bottom: 1px solid #292929;
+
   padding-bottom: 25px;
 }
 
-.live-status {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.capacity-top h3 {
+  font-family: "Manrope", sans-serif;
 
-  color: #b7ff00;
+  font-size: 24px;
+
+  margin: 8px 0 0;
+}
+
+.capacity-top > p {
+  color: #777;
+  font-size: 12px;
+}
+
+.live-text {
+  color: #c8ff00;
+
   font-size: 12px;
   font-weight: 800;
 }
 
-.card-top h3 {
-  margin: 10px 0 0;
-  font-size: 21px;
-}
+.capacity-number {
+  font-family: "Manrope", sans-serif;
 
-.card-top > p {
-  color: #777;
-  font-size: 13px;
-}
+  font-size: 68px;
+  font-weight: 700;
 
-.capacity {
   margin-top: 30px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
 }
 
-.capacity strong {
-  font-size: 62px;
-}
-
-.capacity span {
+.capacity-number small {
   color: #777;
+  font-size: 17px;
 }
 
 .capacity-bar {
-  height: 12px;
+  height: 10px;
+
   background: #292929;
+
   border-radius: 20px;
+
   overflow: hidden;
-  margin-top: 15px;
 }
 
 .capacity-bar div {
   width: 59%;
   height: 100%;
-  background: #b7ff00;
+
+  background: #c8ff00;
+
   border-radius: inherit;
 }
 
-.spots {
+.available {
   color: #999;
-  font-size: 14px;
+
+  margin: 15px 0 25px;
+
+  font-size: 13px;
 }
 
-.gym-stats {
-  margin-top: 28px;
-
+.capacity-grid {
   display: grid;
+
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+
+  gap: 12px;
 }
 
-.gym-stats div {
-  border: 1px solid #292929;
-  border-radius: 12px;
+.capacity-grid div {
+  border: 1px solid #2c2c2c;
+
+  border-radius: 14px;
 
   padding: 22px;
 }
 
-.gym-stats strong {
+.capacity-grid strong {
   display: block;
+
+  font-family: "Manrope", sans-serif;
+
   font-size: 25px;
 }
 
-.gym-stats span {
-  display: block;
+.capacity-grid span {
   color: #888;
-  font-size: 13px;
-  margin-top: 8px;
+
+  font-size: 12px;
 }
 
 
-/* =========================
-   STATS
-========================= */
+/* ================= QUICK FEATURES ================= */
 
-.stats-section {
-  border-top: 1px solid #222;
-  border-bottom: 1px solid #222;
+.feature-strip {
+  margin: 0 5% 110px;
+
+  border: 1px solid #292929;
+  border-radius: 20px;
+
+  background: #101010;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+
+  grid-template-columns: repeat(3, 1fr);
 }
 
-.stats-section div {
-  padding: 35px 9.5%;
-  border-right: 1px solid #222;
-}
+.feature {
+  padding: 30px;
 
-.stats-section strong {
-  display: block;
-  font-size: 38px;
-}
-
-.stats-section span {
-  color: #666;
-  font-size: 10px;
-  letter-spacing: 2px;
-}
-
-
-/* =========================
-   DASHBOARD
-========================= */
-
-.dashboard-section {
-  padding: 150px 9.5%;
-
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 80px;
+  display: flex;
+  gap: 18px;
   align-items: center;
 }
 
-.dashboard-copy h2,
-.membership-section h2 {
-  font-size: clamp(48px, 5vw, 76px);
-  line-height: 0.95;
-  letter-spacing: -4px;
-  margin: 0 0 28px;
+.feature + .feature {
+  border-left: 1px solid #292929;
 }
 
-.dashboard-copy > p:not(.section-label) {
-  color: #929292;
-  line-height: 1.6;
-  font-size: 17px;
-  max-width: 500px;
-}
+.feature-icon {
+  width: 48px;
+  height: 48px;
 
-.dashboard-copy ul {
-  list-style: none;
-  padding: 0;
-  margin: 35px 0;
-}
+  display: grid;
+  place-items: center;
 
-.dashboard-copy li {
-  padding: 16px 0;
-  border-bottom: 1px solid #252525;
-  color: #ccc;
-}
-
-.dashboard-copy li::before {
-  content: "✓";
-  color: #b7ff00;
-  font-weight: bold;
-  margin-right: 15px;
-}
-
-
-/* =========================
-   DASHBOARD CARD
-========================= */
-
-.dashboard-card {
-  background: #111;
-  border: 1px solid #303030;
-  border-radius: 18px;
-  padding: 25px;
-}
-
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-
-  padding-bottom: 20px;
-  border-bottom: 1px solid #292929;
-}
-
-.dashboard-header h3 {
-  margin: 0;
-}
-
-.dashboard-header span {
-  color: #b7ff00;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.dashboard-header i {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  background: #b7ff00;
   border-radius: 50%;
-  margin-right: 6px;
+
+  background: #191919;
+
+  color: #c8ff00;
+
+  font-size: 21px;
 }
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+.feature h3 {
+  margin: 0 0 7px;
 
-  margin-top: 15px;
+  font-family: "Manrope", sans-serif;
+
+  font-size: 16px;
 }
 
-.dashboard-grid div {
-  background: #181818;
-  border: 1px solid #292929;
-  border-radius: 10px;
+.feature p {
+  color: #777;
 
-  padding: 22px;
+  margin: 0;
+
+  font-size: 12px;
 }
 
-.dashboard-grid span {
-  display: block;
+
+/* ================= MEMBER FEATURES ================= */
+
+.member-features {
+  padding: 130px 5%;
+
+  border-top: 1px solid #1c1c1c;
+}
+
+.section-heading {
+  max-width: 750px;
+
+  margin-bottom: 60px;
+}
+
+.section-heading h2,
+.membership-section h2 {
+  font-family: "Manrope", sans-serif;
+
+  font-size: clamp(50px, 5vw, 78px);
+
+  line-height: 0.95;
+
+  letter-spacing: -4px;
+
+  margin: 25px 0;
+}
+
+.section-heading h2 span {
+  color: #c8ff00;
+}
+
+.section-heading > p:last-child {
   color: #888;
-  font-size: 13px;
-}
 
-.dashboard-grid strong {
-  display: block;
-  font-size: 27px;
-  margin-top: 10px;
-}
+  font-size: 17px;
 
-.chart {
-  height: 180px;
+  line-height: 1.7;
 
-  margin-top: 15px;
-  padding: 25px;
-
-  display: flex;
-  align-items: end;
-  gap: 10px;
-
-  border: 1px solid #292929;
-  border-radius: 10px;
-}
-
-.chart div {
-  flex: 1;
-  background: #333;
-  border-radius: 5px 5px 0 0;
-  height: 50%;
-}
-
-.chart div:nth-child(2) {
-  height: 65%;
-}
-
-.chart div:nth-child(3) {
-  height: 58%;
-}
-
-.chart div:nth-child(4) {
-  height: 80%;
-}
-
-.chart div:nth-child(5) {
-  height: 70%;
-}
-
-.chart div.active {
-  height: 90%;
-  background: #b7ff00;
-}
-
-.chart div:nth-child(7) {
-  height: 75%;
+  max-width: 600px;
 }
 
 
-/* =========================
-   MEMBERSHIP
-========================= */
+/* FEATURE CARDS */
 
-.membership-section {
-  padding: 120px 9.5%;
-  border-top: 1px solid #222;
-}
-
-.membership-description {
-  max-width: 700px;
-  color: #888;
-  font-size: 18px;
-  line-height: 1.5;
-  margin: 30px 0 50px;
-}
-
-.plans {
+.member-feature-grid {
   display: grid;
+
   grid-template-columns: repeat(3, 1fr);
+
   gap: 16px;
 }
 
-.plan-card {
+.member-feature-card {
+  min-height: 310px;
+
+  padding: 28px;
+
+  background: #101010;
+
+  border: 1px solid #292929;
+
+  border-radius: 18px;
+
+  transition: 0.25s;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.member-feature-card:hover {
+  transform: translateY(-5px);
+
+  border-color: #444;
+
+  background: #121212;
+}
+
+.member-feature-card.large {
+  grid-column: span 2;
+}
+
+.feature-card-top {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 45px;
+}
+
+.big-icon {
+  width: 52px;
+  height: 52px;
+
+  display: grid;
+  place-items: center;
+
+  background: #191919;
+
+  border-radius: 14px;
+
+  font-size: 23px;
+
+  border: 1px solid #292929;
+}
+
+.feature-card-top > span {
+  color: #555;
+
+  font-family: "Manrope", sans-serif;
+
+  font-size: 13px;
+}
+
+.member-feature-card h3 {
+  font-family: "Manrope", sans-serif;
+
+  font-size: 23px;
+
+  margin: 0 0 14px;
+}
+
+.member-feature-card p {
+  color: #888;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  max-width: 500px;
+}
+
+.feature-link {
+  margin-top: auto;
+
+  padding-top: 25px;
+
+  color: #c8ff00;
+
+  font-size: 13px;
+
+  font-weight: 800;
+}
+
+
+/* ================= MEMBERSHIP ================= */
+
+.membership-section {
+  padding: 130px 5%;
+
+  border-top: 1px solid #1c1c1c;
+}
+
+.membership-description {
+  color: #888;
+
+  font-size: 17px;
+
+  line-height: 1.6;
+
+  max-width: 700px;
+
+  margin-bottom: 55px;
+}
+
+.membership-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+.membership-card {
   position: relative;
 
   background: #111;
-  border: 1px solid #303030;
-  border-radius: 16px;
+
+  border: 1px solid #292929;
+
+  border-radius: 18px;
 
   padding: 32px;
+
+  min-height: 450px;
 }
 
-.plan-card.popular {
-  border-color: #b7ff00;
-}
-
-.plan-card h3 {
-  font-size: 20px;
-}
-
-.price {
-  font-size: 42px;
-  font-weight: 900;
-  margin: 35px 0 8px;
-}
-
-.price span {
-  color: #888;
-  font-size: 14px;
-}
-
-.plan-card > p {
-  color: #888;
-}
-
-.plan-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 35px 0;
-}
-
-.plan-card li {
-  color: #bbb;
-  margin: 18px 0;
-}
-
-.plan-card li::before {
-  content: "✓";
-  color: #b7ff00;
-  margin-right: 12px;
-}
-
-.plan-button {
-  width: 100%;
+.membership-card.popular {
+  border-color: #c8ff00;
 }
 
 .popular-badge {
   position: absolute;
+
   top: 18px;
   right: 18px;
 
-  background: #b7ff00;
-  color: #080808;
+  background: #c8ff00;
 
-  padding: 8px 11px;
-  border-radius: 6px;
+  color: #050505;
+
+  padding: 7px 10px;
+
+  border-radius: 5px;
 
   font-size: 10px;
+
   font-weight: 900;
 }
 
+.membership-card h3 {
+  font-family: "Manrope", sans-serif;
 
-/* =========================
-   FOOTER
-========================= */
+  font-size: 22px;
+}
+
+.price {
+  font-family: "Space Grotesk", sans-serif;
+
+  font-size: 42px;
+
+  font-weight: 700;
+
+  margin: 35px 0 8px;
+}
+
+.price span {
+  color: #777;
+
+  font-size: 15px;
+}
+
+.membership-card > p {
+  color: #888;
+}
+
+.membership-card ul {
+  list-style: none;
+
+  padding: 0;
+
+  margin: 35px 0;
+}
+
+.membership-card li {
+  padding: 11px 0;
+
+  color: #bbb;
+
+  font-size: 14px;
+}
+
+.membership-card button {
+  margin-top: 10px;
+}
+
+
+/* ================= FOOTER ================= */
 
 footer {
-  border-top: 1px solid #222;
+  border-top: 1px solid #1d1d1d;
 
-  padding: 55px 9.5%;
+  padding: 40px 5%;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer-logo {
-  font-size: 24px;
-  font-weight: 900;
-}
-
-.footer-logo span {
-  color: #b7ff00;
-}
-
-footer p,
-footer > span {
   color: #555;
-  font-size: 11px;
-  letter-spacing: 2px;
+
+  font-size: 12px;
+
+  letter-spacing: 1px;
 }
 
 
-/* =========================
-   TABLET
-========================= */
+/* ================= TABLET ================= */
 
 @media (max-width: 1000px) {
 
-  .navbar {
-    padding: 0 5%;
+  .nav-links {
+    gap: 20px;
   }
 
-  .hero-section {
-    padding: 70px 5%;
+  .hero {
     grid-template-columns: 1fr;
   }
 
-  .hero-content {
-    max-width: 800px;
+  .capacity-card {
+    max-width: 700px;
   }
 
-  .dashboard-section {
-    padding: 100px 5%;
+  .member-feature-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .member-feature-card.large {
+    grid-column: span 2;
+  }
+
+  .membership-grid {
     grid-template-columns: 1fr;
   }
-
-  .membership-section {
-    padding: 100px 5%;
-  }
-
-  .stats-section div {
-    padding: 30px 5%;
-  }
-
-  .plans {
-    grid-template-columns: 1fr;
-  }
-
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* ================= MOBILE ================= */
 
 @media (max-width: 700px) {
 
   .navbar {
-    height: 72px;
+    height: 75px;
+
+    padding: 0 20px;
   }
 
   .nav-links {
     display: none;
   }
 
-  .nav-button {
-    padding: 11px 15px;
-    font-size: 13px;
+  .nav-btn {
+    padding: 12px 15px;
   }
 
-  .hero-section {
+  .hero {
     padding: 55px 20px;
+
+    min-height: auto;
+
     gap: 50px;
   }
 
-  .hero-eyebrow {
-    font-size: 10px;
+  .hero-label {
     letter-spacing: 2px;
   }
 
-  .hero-content h1 {
-    font-size: clamp(65px, 19vw, 110px);
-    letter-spacing: -5px;
+  .hero h1 {
+    font-size: clamp(55px, 16vw, 90px);
+
+    letter-spacing: -4px;
   }
 
   .hero-description {
     font-size: 16px;
-    margin: 28px 0;
   }
 
   .hero-buttons {
@@ -714,73 +765,170 @@ footer > span {
     width: 100%;
   }
 
-  .gym-card {
-    padding: 20px;
+  .capacity-card {
+    padding: 22px;
   }
 
-  .capacity strong {
-    font-size: 48px;
+  .capacity-number {
+    font-size: 55px;
   }
 
-  .gym-stats {
-    grid-template-columns: 1fr 1fr;
+  .feature-strip {
+    margin: 0 20px 70px;
+
+    grid-template-columns: 1fr;
   }
 
-  .gym-stats div {
-    padding: 16px;
+  .feature + .feature {
+    border-left: none;
+
+    border-top: 1px solid #292929;
   }
 
-  .stats-section {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .stats-section div {
-    padding: 25px 20px;
-  }
-
-  .stats-section strong {
-    font-size: 28px;
-  }
-
-  .dashboard-section {
-    padding: 80px 20px;
-  }
-
-  .dashboard-copy h2,
-  .membership-section h2 {
-    font-size: 48px;
-    letter-spacing: -3px;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .dashboard-grid div {
-    padding: 15px;
-  }
-
-  .dashboard-grid strong {
-    font-size: 22px;
-  }
-
+  .member-features,
   .membership-section {
     padding: 80px 20px;
   }
 
-  .plans {
-    gap: 12px;
+  .section-heading h2,
+  .membership-section h2 {
+    font-size: 48px;
+
+    letter-spacing: -2px;
   }
 
-  .plan-card {
-    padding: 25px;
+  .member-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .member-feature-card.large {
+    grid-column: span 1;
+  }
+
+  .membership-card {
+    min-height: auto;
+  }
+}
+
+
+@media (max-width: 450px) {
+
+  .capacity-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature {
+    padding: 22px;
+  }
+
+  .logo {
+    font-size: 21px;
+  }
+
+}
+
+/* ================= CONTACT ================= */
+
+.contact-section {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 140px 0 120px;
+  border-top: 1px solid #242424;
+}
+
+.contact-section .section-label {
+  margin-bottom: 28px;
+}
+
+.contact-section h2 {
+  max-width: 700px;
+  margin: 0 0 28px;
+  font-size: clamp(52px, 6vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.contact-section h2 span {
+  color: #b8ff00;
+}
+
+.contact-section > p:not(.section-label) {
+  max-width: 620px;
+  margin: 0 0 36px;
+  color: #929292;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 34px 0 40px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-top: 1px solid #242424;
+}
+
+footer > div {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+footer > div span {
+  color: #b8ff00;
+}
+
+footer p {
+  margin: 0;
+  color: #555;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+
+/* ================= MEMBERSHIP SPACING ================= */
+
+.membership-section {
+  width: min(1200px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  .contact-section {
+    width: calc(100% - 32px);
+    padding: 90px 0 80px;
+  }
+
+  .contact-section h2 {
+    font-size: clamp(44px, 13vw, 64px);
+  }
+
+  .contact-section > p:not(.section-label) {
+    font-size: 16px;
   }
 
   footer {
-    padding: 40px 20px;
+    width: calc(100% - 32px);
+    padding: 28px 0 32px;
+
     flex-direction: column;
-    gap: 20px;
-    text-align: center;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  footer p {
+    font-size: 11px;
   }
 
 }
