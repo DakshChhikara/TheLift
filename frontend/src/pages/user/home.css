@@ -355,6 +355,95 @@
 }
 
 
+/* ================= LOCKED CAPACITY ================= */
+
+.capacity-locked {
+  min-height: 430px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 20px 0 10px;
+}
+
+.lock-icon {
+  width: 56px;
+  height: 56px;
+
+  display: grid;
+  place-items: center;
+
+  background: #191919;
+  border: 1px solid #292929;
+  border-radius: 14px;
+
+  font-size: 25px;
+
+  margin-bottom: 28px;
+}
+
+.capacity-locked h4 {
+  margin: 0 0 14px;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+
+  color: #f5f5f5;
+}
+
+.capacity-locked p {
+  max-width: 620px;
+
+  margin: 0 0 30px;
+
+  color: #888;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.capacity-locked button {
+  border: 0;
+  border-radius: 9px;
+
+  padding: 15px 22px;
+
+  background: #c8ff00;
+  color: #050505;
+
+  font-family: "Manrope", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.capacity-locked button:hover {
+  transform: translateY(-2px);
+  background: #d2ff33;
+}
+
+@media (max-width: 700px) {
+  .capacity-locked {
+    min-height: 360px;
+  }
+
+  .capacity-locked h4 {
+    font-size: 23px;
+  }
+
+  .capacity-locked p {
+    font-size: 14px;
+  }
+}
+
+
 /* ================= QUICK FEATURES ================= */
 
 .feature-strip {

@@ -1,12 +1,31 @@
 import "./home.css";
 
-function Home() {
+function Home({ onLoginRequired }) {
+  const isLoggedIn = !!localStorage.getItem("token");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.reload();
+  };
+
+  const handleFeatureClick = () => {
+    if (!isLoggedIn) {
+      onLoginRequired();
+      return;
+    }
+
+    alert("Feature access granted!");
+  };
+
   return (
     <div className="home">
 
       {/* ================= NAVBAR ================= */}
 
       <nav className="navbar">
+
         <div className="logo">
           THE<span>LIFT</span>
         </div>
@@ -18,13 +37,26 @@ function Home() {
           <a href="#contact">Contact</a>
         </div>
 
-        <button className="nav-btn">
-          Join The Lift <span>↗</span>
-        </button>
+        <div>
+          <button className="nav-btn">
+            Join The Lift <span>↗</span>
+          </button>
+
+          {isLoggedIn && (
+            <button
+              className="nav-btn"
+              onClick={handleLogout}
+              style={{ marginLeft: "10px" }}
+            >
+              Logout
+            </button>
+          )}
+        </div>
+
       </nav>
 
 
-      {/* ================= HERO / EXPERIENCE ================= */}
+      {/* ================= HERO ================= */}
 
       <section className="hero" id="experience">
 
@@ -51,6 +83,7 @@ function Home() {
           </p>
 
           <div className="hero-buttons">
+
             <button className="primary-btn">
               Book a Free Trial →
             </button>
@@ -58,23 +91,26 @@ function Home() {
             <button className="secondary-btn">
               Explore The Lift
             </button>
+
           </div>
 
         </div>
 
 
-        {/* GYM CAPACITY CARD */}
+        {/* ================= GYM CAPACITY ================= */}
 
         <div className="capacity-card">
 
           <div className="capacity-top">
 
             <div>
+
               <p className="live-text">
                 <span></span> LIVE NOW
               </p>
 
               <h3>Gym Capacity</h3>
+
             </div>
 
             <p>Updated just now</p>
@@ -82,44 +118,69 @@ function Home() {
           </div>
 
 
-          <div className="capacity-number">
-            47 <small>/80 people</small>
-          </div>
+          {isLoggedIn ? (
 
+            <>
+              <div className="capacity-number">
+                47 <small>/80 people</small>
+              </div>
 
-          <div className="capacity-bar">
-            <div></div>
-          </div>
+              <div className="capacity-bar">
+                <div></div>
+              </div>
 
+              <p className="available">
+                33 spots available right now
+              </p>
 
-          <p className="available">
-            33 spots available right now
-          </p>
+              <div className="capacity-grid">
 
+                <div>
+                  <strong>8/10</strong>
+                  <span>Gym Rating</span>
+                </div>
 
-          <div className="capacity-grid">
+                <div>
+                  <strong>24/7</strong>
+                  <span>Access Available</span>
+                </div>
 
-            <div>
-              <strong>8/10</strong>
-              <span>Gym Rating</span>
+                <div>
+                  <strong>12</strong>
+                  <span>Expert Trainers</span>
+                </div>
+
+                <div>
+                  <strong>500+</strong>
+                  <span>Active Members</span>
+                </div>
+
+              </div>
+            </>
+
+          ) : (
+
+            <div className="capacity-locked">
+
+              <div className="lock-icon">
+                🔒
+              </div>
+
+              <h4>
+                Member Access Required
+              </h4>
+
+              <p>
+                Login to view live gym capacity and member information.
+              </p>
+
+              <button onClick={onLoginRequired}>
+                LOGIN TO VIEW →
+              </button>
+
             </div>
 
-            <div>
-              <strong>24/7</strong>
-              <span>Access Available</span>
-            </div>
-
-            <div>
-              <strong>12</strong>
-              <span>Expert Trainers</span>
-            </div>
-
-            <div>
-              <strong>500+</strong>
-              <span>Active Members</span>
-            </div>
-
-          </div>
+          )}
 
         </div>
 
@@ -204,7 +265,7 @@ function Home() {
         <div className="member-feature-grid">
 
 
-          {/* NUTRITION */}
+          {/* 01 NUTRITION */}
 
           <div className="member-feature-card large">
 
@@ -227,14 +288,17 @@ function Home() {
               lifestyle, fitness goal and daily calorie needs.
             </p>
 
-            <div className="feature-link">
+            <div
+              className="feature-link"
+              onClick={handleFeatureClick}
+            >
               Explore Nutrition →
             </div>
 
           </div>
 
 
-          {/* BMI */}
+          {/* 02 BMI */}
 
           <div className="member-feature-card">
 
@@ -257,14 +321,17 @@ function Home() {
               using your height and weight.
             </p>
 
-            <div className="feature-link">
+            <div
+              className="feature-link"
+              onClick={handleFeatureClick}
+            >
               Calculate BMI →
             </div>
 
           </div>
 
 
-          {/* CALORIES */}
+          {/* 03 CALORIES */}
 
           <div className="member-feature-card">
 
@@ -287,14 +354,17 @@ function Home() {
               according to your activity and goal.
             </p>
 
-            <div className="feature-link">
+            <div
+              className="feature-link"
+              onClick={handleFeatureClick}
+            >
               Calculate Calories →
             </div>
 
           </div>
 
 
-          {/* TARGET WEIGHT */}
+          {/* 04 TARGET WEIGHT */}
 
           <div className="member-feature-card">
 
@@ -317,14 +387,17 @@ function Home() {
               you are from your goal.
             </p>
 
-            <div className="feature-link">
+            <div
+              className="feature-link"
+              onClick={handleFeatureClick}
+            >
               Set Your Goal →
             </div>
 
           </div>
 
 
-          {/* WORKOUT */}
+          {/* 05 WORKOUT */}
 
           <div className="member-feature-card">
 
@@ -347,14 +420,17 @@ function Home() {
               around your fitness level and goals.
             </p>
 
-            <div className="feature-link">
+            <div
+              className="feature-link"
+              onClick={handleFeatureClick}
+            >
               View Workouts →
             </div>
 
           </div>
 
 
-          {/* PROGRESS */}
+          {/* 06 PROGRESS */}
 
           <div className="member-feature-card">
 
@@ -377,7 +453,10 @@ function Home() {
               and your overall progress over time.
             </p>
 
-            <div className="feature-link">
+            <div
+              className="feature-link"
+              onClick={handleFeatureClick}
+            >
               Track Progress →
             </div>
 
@@ -413,14 +492,11 @@ function Home() {
 
         <div className="membership-grid">
 
-
           {/* STARTER */}
 
           <div className="membership-card">
 
-            <h3>
-              Starter
-            </h3>
+            <h3>Starter</h3>
 
             <div className="price">
               ₹1,999 <span>/mo</span>
@@ -437,7 +513,10 @@ function Home() {
               <li>✓ AI fitness assistant</li>
             </ul>
 
-            <button className="secondary-btn">
+            <button
+              className="secondary-btn"
+              onClick={handleFeatureClick}
+            >
               Choose Starter
             </button>
 
@@ -452,9 +531,7 @@ function Home() {
               MOST POPULAR
             </div>
 
-            <h3>
-              Pro
-            </h3>
+            <h3>Pro</h3>
 
             <div className="price">
               ₹2,999 <span>/mo</span>
@@ -471,7 +548,10 @@ function Home() {
               <li>✓ Advanced progress tracking</li>
             </ul>
 
-            <button className="primary-btn">
+            <button
+              className="primary-btn"
+              onClick={handleFeatureClick}
+            >
               Choose Pro
             </button>
 
@@ -482,9 +562,7 @@ function Home() {
 
           <div className="membership-card">
 
-            <h3>
-              Elite
-            </h3>
+            <h3>Elite</h3>
 
             <div className="price">
               ₹4,999 <span>/mo</span>
@@ -501,7 +579,10 @@ function Home() {
               <li>✓ Priority support</li>
             </ul>
 
-            <button className="secondary-btn">
+            <button
+              className="secondary-btn"
+              onClick={handleFeatureClick}
+            >
               Choose Elite
             </button>
 
@@ -544,6 +625,7 @@ function Home() {
       {/* ================= FOOTER ================= */}
 
       <footer>
+
         <div>
           THE<span>LIFT</span>
         </div>
@@ -551,6 +633,7 @@ function Home() {
         <p>
           © 2026 THE LIFT — POWERED BY FITFLOW
         </p>
+
       </footer>
 
     </div>
