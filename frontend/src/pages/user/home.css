@@ -1,0 +1,786 @@
+/* =========================
+   GLOBAL
+========================= */
+
+.home-page {
+  min-height: 100vh;
+  background: #080808;
+  color: #f5f5f5;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+.home-page * {
+  box-sizing: border-box;
+}
+
+.home-page button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  height: 88px;
+  padding: 0 9.5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #222;
+  background: rgba(8, 8, 8, 0.95);
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+}
+
+.nav-logo span {
+  color: #b7ff00;
+}
+
+.nav-links {
+  display: flex;
+  gap: 42px;
+}
+
+.nav-links a {
+  color: #c8c8c8;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  color: #b7ff00;
+}
+
+.nav-button {
+  border: none;
+  background: #b7ff00;
+  color: #080808;
+
+  padding: 15px 25px;
+  border-radius: 9px;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero-section {
+  min-height: 720px;
+
+  padding: 80px 9.5%;
+
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 80px;
+  align-items: center;
+
+  background:
+    radial-gradient(
+      circle at 75% 30%,
+      rgba(183, 255, 0, 0.12),
+      transparent 32%
+    );
+}
+
+.hero-content {
+  max-width: 680px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 15px;
+
+  border: 1px solid #333;
+  border-radius: 30px;
+
+  color: #d0d0d0;
+  font-size: 13px;
+  margin-bottom: 35px;
+}
+
+.hero-badge span,
+.live-status span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b7ff00;
+  box-shadow: 0 0 12px #b7ff00;
+}
+
+.hero-eyebrow,
+.section-label {
+  color: #b7ff00;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin-bottom: 25px;
+}
+
+.hero-content h1 {
+  margin: 0;
+
+  font-size: clamp(80px, 9vw, 150px);
+  line-height: 0.84;
+  letter-spacing: -8px;
+
+  font-weight: 950;
+}
+
+.hero-content h1 span {
+  color: #b7ff00;
+}
+
+.hero-description {
+  max-width: 620px;
+
+  color: #929292;
+  font-size: 19px;
+  line-height: 1.55;
+
+  margin: 38px 0;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 14px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary-button,
+.secondary-button,
+.plan-button {
+  border-radius: 9px;
+
+  padding: 17px 24px;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  transition: 0.2s;
+}
+
+.primary-button {
+  background: #b7ff00;
+  color: #080808;
+  border: 1px solid #b7ff00;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(183, 255, 0, 0.18);
+}
+
+.secondary-button,
+.plan-button {
+  background: #111;
+  color: #eee;
+  border: 1px solid #333;
+}
+
+.secondary-button:hover,
+.plan-button:hover {
+  border-color: #b7ff00;
+}
+
+
+/* =========================
+   GYM CARD
+========================= */
+
+.gym-card {
+  background: #111;
+  border: 1px solid #303030;
+  border-radius: 20px;
+
+  padding: 30px;
+
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.45);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  border-bottom: 1px solid #292929;
+  padding-bottom: 25px;
+}
+
+.live-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #b7ff00;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.card-top h3 {
+  margin: 10px 0 0;
+  font-size: 21px;
+}
+
+.card-top > p {
+  color: #777;
+  font-size: 13px;
+}
+
+.capacity {
+  margin-top: 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.capacity strong {
+  font-size: 62px;
+}
+
+.capacity span {
+  color: #777;
+}
+
+.capacity-bar {
+  height: 12px;
+  background: #292929;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 15px;
+}
+
+.capacity-bar div {
+  width: 59%;
+  height: 100%;
+  background: #b7ff00;
+  border-radius: inherit;
+}
+
+.spots {
+  color: #999;
+  font-size: 14px;
+}
+
+.gym-stats {
+  margin-top: 28px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.gym-stats div {
+  border: 1px solid #292929;
+  border-radius: 12px;
+
+  padding: 22px;
+}
+
+.gym-stats strong {
+  display: block;
+  font-size: 25px;
+}
+
+.gym-stats span {
+  display: block;
+  color: #888;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats-section {
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.stats-section div {
+  padding: 35px 9.5%;
+  border-right: 1px solid #222;
+}
+
+.stats-section strong {
+  display: block;
+  font-size: 38px;
+}
+
+.stats-section span {
+  color: #666;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard-section {
+  padding: 150px 9.5%;
+
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.dashboard-copy h2,
+.membership-section h2 {
+  font-size: clamp(48px, 5vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -4px;
+  margin: 0 0 28px;
+}
+
+.dashboard-copy > p:not(.section-label) {
+  color: #929292;
+  line-height: 1.6;
+  font-size: 17px;
+  max-width: 500px;
+}
+
+.dashboard-copy ul {
+  list-style: none;
+  padding: 0;
+  margin: 35px 0;
+}
+
+.dashboard-copy li {
+  padding: 16px 0;
+  border-bottom: 1px solid #252525;
+  color: #ccc;
+}
+
+.dashboard-copy li::before {
+  content: "✓";
+  color: #b7ff00;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+
+/* =========================
+   DASHBOARD CARD
+========================= */
+
+.dashboard-card {
+  background: #111;
+  border: 1px solid #303030;
+  border-radius: 18px;
+  padding: 25px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+
+  padding-bottom: 20px;
+  border-bottom: 1px solid #292929;
+}
+
+.dashboard-header h3 {
+  margin: 0;
+}
+
+.dashboard-header span {
+  color: #b7ff00;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.dashboard-header i {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #b7ff00;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+
+  margin-top: 15px;
+}
+
+.dashboard-grid div {
+  background: #181818;
+  border: 1px solid #292929;
+  border-radius: 10px;
+
+  padding: 22px;
+}
+
+.dashboard-grid span {
+  display: block;
+  color: #888;
+  font-size: 13px;
+}
+
+.dashboard-grid strong {
+  display: block;
+  font-size: 27px;
+  margin-top: 10px;
+}
+
+.chart {
+  height: 180px;
+
+  margin-top: 15px;
+  padding: 25px;
+
+  display: flex;
+  align-items: end;
+  gap: 10px;
+
+  border: 1px solid #292929;
+  border-radius: 10px;
+}
+
+.chart div {
+  flex: 1;
+  background: #333;
+  border-radius: 5px 5px 0 0;
+  height: 50%;
+}
+
+.chart div:nth-child(2) {
+  height: 65%;
+}
+
+.chart div:nth-child(3) {
+  height: 58%;
+}
+
+.chart div:nth-child(4) {
+  height: 80%;
+}
+
+.chart div:nth-child(5) {
+  height: 70%;
+}
+
+.chart div.active {
+  height: 90%;
+  background: #b7ff00;
+}
+
+.chart div:nth-child(7) {
+  height: 75%;
+}
+
+
+/* =========================
+   MEMBERSHIP
+========================= */
+
+.membership-section {
+  padding: 120px 9.5%;
+  border-top: 1px solid #222;
+}
+
+.membership-description {
+  max-width: 700px;
+  color: #888;
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 30px 0 50px;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.plan-card {
+  position: relative;
+
+  background: #111;
+  border: 1px solid #303030;
+  border-radius: 16px;
+
+  padding: 32px;
+}
+
+.plan-card.popular {
+  border-color: #b7ff00;
+}
+
+.plan-card h3 {
+  font-size: 20px;
+}
+
+.price {
+  font-size: 42px;
+  font-weight: 900;
+  margin: 35px 0 8px;
+}
+
+.price span {
+  color: #888;
+  font-size: 14px;
+}
+
+.plan-card > p {
+  color: #888;
+}
+
+.plan-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 35px 0;
+}
+
+.plan-card li {
+  color: #bbb;
+  margin: 18px 0;
+}
+
+.plan-card li::before {
+  content: "✓";
+  color: #b7ff00;
+  margin-right: 12px;
+}
+
+.plan-button {
+  width: 100%;
+}
+
+.popular-badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  background: #b7ff00;
+  color: #080808;
+
+  padding: 8px 11px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  border-top: 1px solid #222;
+
+  padding: 55px 9.5%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-logo {
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.footer-logo span {
+  color: #b7ff00;
+}
+
+footer p,
+footer > span {
+  color: #555;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+  .navbar {
+    padding: 0 5%;
+  }
+
+  .hero-section {
+    padding: 70px 5%;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-content {
+    max-width: 800px;
+  }
+
+  .dashboard-section {
+    padding: 100px 5%;
+    grid-template-columns: 1fr;
+  }
+
+  .membership-section {
+    padding: 100px 5%;
+  }
+
+  .stats-section div {
+    padding: 30px 5%;
+  }
+
+  .plans {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .navbar {
+    height: 72px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-button {
+    padding: 11px 15px;
+    font-size: 13px;
+  }
+
+  .hero-section {
+    padding: 55px 20px;
+    gap: 50px;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(65px, 19vw, 110px);
+    letter-spacing: -5px;
+  }
+
+  .hero-description {
+    font-size: 16px;
+    margin: 28px 0;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons button {
+    width: 100%;
+  }
+
+  .gym-card {
+    padding: 20px;
+  }
+
+  .capacity strong {
+    font-size: 48px;
+  }
+
+  .gym-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gym-stats div {
+    padding: 16px;
+  }
+
+  .stats-section {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stats-section div {
+    padding: 25px 20px;
+  }
+
+  .stats-section strong {
+    font-size: 28px;
+  }
+
+  .dashboard-section {
+    padding: 80px 20px;
+  }
+
+  .dashboard-copy h2,
+  .membership-section h2 {
+    font-size: 48px;
+    letter-spacing: -3px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dashboard-grid div {
+    padding: 15px;
+  }
+
+  .dashboard-grid strong {
+    font-size: 22px;
+  }
+
+  .membership-section {
+    padding: 80px 20px;
+  }
+
+  .plans {
+    gap: 12px;
+  }
+
+  .plan-card {
+    padding: 25px;
+  }
+
+  footer {
+    padding: 40px 20px;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+}
