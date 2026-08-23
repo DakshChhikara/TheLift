@@ -1,0 +1,1416 @@
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    background:#080808;
+
+    color:#f5f5f5;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+}
+
+
+
+:root{
+
+    --bg:#080808;
+
+    --panel:#111;
+
+    --border:#292929;
+
+    --muted:#777;
+
+    --lime:#baff00;
+
+}
+
+
+
+
+
+
+
+/* =========================
+OWNER DASHBOARD
+========================= */
+
+
+.owner-dashboard{
+
+    min-height:100vh;
+
+    background:var(--bg);
+
+}
+
+
+
+
+
+/* =========================
+SIDEBAR
+========================= */
+
+
+.owner-sidebar{
+
+    position:fixed;
+
+    left:0;
+
+    top:0;
+
+    bottom:0;
+
+    width:245px;
+
+    padding:30px 18px;
+
+    background:#0d0d0d;
+
+    border-right:1px solid var(--border);
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+.owner-logo{
+
+    padding:0 14px;
+
+    margin-bottom:45px;
+
+    font-size:23px;
+
+    font-weight:900;
+
+}
+
+
+.owner-logo span{
+
+    color:var(--lime);
+
+}
+
+
+
+
+.owner-nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+
+}
+
+
+
+
+.owner-nav-item{
+
+    width:100%;
+
+    height:48px;
+
+    padding:0 15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    border:1px solid transparent;
+
+    border-radius:9px;
+
+    background:transparent;
+
+    color:#777;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+}
+
+
+
+.owner-nav-item:hover{
+
+    background:#151515;
+
+    color:white;
+
+}
+
+
+
+.owner-nav-item.active{
+
+    color:var(--lime);
+
+    background:#181818;
+
+}
+
+
+
+
+
+.owner-sidebar-bottom{
+
+    margin-top:auto;
+
+}
+
+
+
+
+
+.owner-profile{
+
+    margin-top:20px;
+
+    padding:15px 10px;
+
+    border-top:1px solid var(--border);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+
+
+.owner-avatar{
+
+    width:38px;
+
+    height:38px;
+
+    border-radius:50%;
+
+    background:var(--lime);
+
+    color:black;
+
+    display:grid;
+
+    place-items:center;
+
+    font-weight:900;
+
+}
+
+
+
+
+
+
+/* =========================
+MAIN
+========================= */
+
+
+.owner-main{
+
+    margin-left:245px;
+
+    padding:42px 45px;
+
+}
+
+
+
+
+.owner-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    margin-bottom:38px;
+
+}
+
+
+
+
+.dashboard-label{
+
+    color:var(--lime);
+
+    font-size:11px;
+
+    letter-spacing:3px;
+
+    font-weight:800;
+
+}
+
+
+
+.owner-header h1{
+
+    font-size:42px;
+
+    margin:0;
+
+}
+
+
+
+.owner-header h1 span{
+
+    color:var(--lime);
+
+}
+
+
+
+.dashboard-subtitle{
+
+    color:#777;
+
+}
+
+
+
+
+
+
+.live-status{
+
+    padding:9px 15px;
+
+    border-radius:30px;
+
+    border:1px solid #293000;
+
+    color:var(--lime);
+
+    background:#111500;
+
+    font-weight:bold;
+
+    font-size:11px;
+
+}
+
+/* =========================
+STATS CARDS
+========================= */
+
+
+.overview-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:18px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.stat-card{
+
+    min-height:150px;
+
+    padding:22px;
+
+    background:#111;
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+
+    transition:.2s;
+
+}
+
+
+
+.stat-card:hover{
+
+    transform:translateY(-3px);
+
+    border-color:#444;
+
+}
+
+
+
+.stat-card p{
+
+    color:#777;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+
+}
+
+
+
+.stat-card h2{
+
+    font-size:36px;
+
+    margin:20px 0 5px;
+
+}
+
+
+
+.stat-card span{
+
+    color:#666;
+
+    font-size:12px;
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================
+DASHBOARD GRID
+========================= */
+
+
+.dashboard-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:18px;
+
+    margin-top:20px;
+
+}
+
+
+
+
+
+.dashboard-panel{
+
+    padding:27px;
+
+    background:#111;
+
+    border:1px solid var(--border);
+
+    border-radius:17px;
+
+}
+
+
+
+.panel-label{
+
+    color:var(--lime);
+
+    font-size:10px;
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+}
+
+
+
+.dashboard-panel h2{
+
+    font-size:25px;
+
+}
+
+
+
+
+
+
+/* CAPACITY */
+
+
+.capacity-big-number{
+
+    display:flex;
+
+    align-items:baseline;
+
+    gap:8px;
+
+    margin-top:35px;
+
+}
+
+
+
+.capacity-big-number strong{
+
+    font-size:68px;
+
+}
+
+
+
+.capacity-big-number span{
+
+    color:#777;
+
+}
+
+
+
+
+.capacity-track{
+
+    width:100%;
+
+    height:9px;
+
+    margin-top:25px;
+
+    background:#292929;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+}
+
+
+
+.capacity-fill{
+
+    height:100%;
+
+    background:var(--lime);
+
+    transition:.4s;
+
+}
+
+
+
+
+
+.capacity-info{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:10px;
+
+    margin-top:20px;
+
+}
+
+
+
+
+.capacity-info div{
+
+    padding:15px;
+
+    background:#101010;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+}
+
+
+
+.capacity-info strong{
+
+    display:block;
+
+    font-size:22px;
+
+}
+
+
+
+.capacity-info span{
+
+    color:#666;
+
+    font-size:11px;
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+QUICK ACTIONS
+========================= */
+
+
+.quick-actions{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    margin-top:25px;
+
+}
+
+
+
+.quick-actions button{
+
+    width:100%;
+
+    padding:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    background:#151515;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+
+
+.quick-actions button:hover{
+
+    border-color:var(--lime);
+
+}
+
+
+
+.quick-actions button > span{
+
+    width:38px;
+
+    height:38px;
+
+    display:grid;
+
+    place-items:center;
+
+    background:#1e1e1e;
+
+    border-radius:8px;
+
+    color:var(--lime);
+
+}
+
+
+
+.quick-actions strong{
+
+    display:block;
+
+}
+
+
+
+.quick-actions small{
+
+    color:#666;
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================
+MEMBERS TABLE
+========================= */
+
+
+.members-table{
+
+    margin-top:25px;
+
+    background:#111;
+
+    border:1px solid var(--border);
+
+    border-radius:17px;
+
+    overflow:hidden;
+
+}
+
+
+
+.table-head,
+.member-row{
+
+    display:grid;
+
+    grid-template-columns:
+
+    50px
+
+    1.5fr
+
+    2fr
+
+    1fr
+
+    1fr
+
+    1fr
+
+    120px;
+
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:18px 25px;
+
+}
+
+
+
+.table-head{
+
+    color:#777;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+
+
+.member-row{
+
+    color:#aaa;
+
+    border-bottom:1px solid #222;
+
+}
+
+
+
+.member-row:hover{
+
+    background:#151515;
+
+}
+
+
+
+.member-name{
+
+    color:white;
+
+    font-weight:700;
+
+}
+
+
+
+.member-status{
+
+    color:var(--lime);
+
+    font-weight:800;
+
+}
+
+
+
+.delete-member-btn{
+
+    background:transparent;
+
+    border:1px solid #333;
+
+    color:#ff5555;
+
+    padding:8px 15px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+}
+
+/* =========================
+ADD MEMBER MODAL
+========================= */
+
+
+.add-member-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+
+
+
+.add-member-modal{
+
+    width:500px;
+
+    background:#111;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:30px;
+
+}
+
+
+
+
+.add-member-modal h2{
+
+    margin:0;
+
+    font-size:28px;
+
+}
+
+
+
+.add-member-description{
+
+    color:#777;
+
+    margin:10px 0 25px;
+
+}
+
+
+
+
+
+.add-member-field{
+
+    margin-bottom:18px;
+
+}
+
+
+
+.add-member-field label{
+
+    display:block;
+
+    color:#777;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.add-member-field input,
+.add-member-field select{
+
+    width:100%;
+
+    height:48px;
+
+    background:#181818;
+
+    border:1px solid #303030;
+
+    border-radius:10px;
+
+    padding:0 14px;
+
+    color:white;
+
+}
+
+
+
+.add-member-row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:15px;
+
+}
+
+
+
+.add-member-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:25px;
+
+}
+
+
+
+.add-member-submit{
+
+    padding:12px 22px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--lime);
+
+    color:black;
+
+    font-weight:900;
+
+    cursor:pointer;
+
+}
+
+
+
+.add-member-cancel{
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    border:1px solid #333;
+
+    background:#181818;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================
+CREDENTIAL POPUP
+========================= */
+
+
+.credentials-box{
+
+    margin:25px 0;
+
+    padding:20px;
+
+    background:#181818;
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+}
+
+
+
+.credential-item span{
+
+    display:block;
+
+    color:#777;
+
+    font-size:11px;
+
+    margin-bottom:7px;
+
+}
+
+
+
+.credential-item strong{
+
+    color:var(--lime);
+
+}
+
+
+
+.credential-item + .credential-item{
+
+    margin-top:20px;
+
+    padding-top:20px;
+
+    border-top:1px solid #292929;
+
+}
+
+
+
+
+
+
+
+
+
+/* =========================
+CHECK IN MODAL
+========================= */
+
+
+.checkin-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+
+
+
+
+.checkin-modal{
+
+    width:520px;
+
+    max-height:80vh;
+
+    overflow-y:auto;
+
+    background:#111;
+
+    border:1px solid #333;
+
+    border-radius:20px;
+
+    padding:35px;
+
+}
+
+
+
+.checkin-modal h2{
+
+    color:white;
+
+    font-size:30px;
+
+    margin-bottom:25px;
+
+}
+
+
+
+
+
+.checkin-members{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
+
+
+
+
+.checkin-member-card{
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    background:#171717;
+
+    border:1px solid #333;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+
+
+.checkin-member-card:hover{
+
+    border-color:var(--lime);
+
+    transform:translateY(-2px);
+
+}
+
+
+
+
+.member-avatar{
+
+    width:45px;
+
+    height:45px;
+
+    border-radius:50%;
+
+    background:var(--lime);
+
+    color:black;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:900;
+
+}
+
+
+
+.checkin-info{
+
+    flex:1;
+
+    text-align:left;
+
+}
+
+
+
+.checkin-info strong{
+
+    display:block;
+
+    font-size:16px;
+
+}
+
+
+
+.checkin-info small{
+
+    color:#777;
+
+}
+
+
+
+.checkin-btn{
+
+    background:var(--lime);
+
+    color:black;
+
+    padding:10px 16px;
+
+    border-radius:10px;
+
+    font-weight:900;
+
+}
+
+
+
+
+
+
+
+
+
+/* Check-in dialog uses the same visual language as the add-member modal. */
+.checkin-modal{
+    width:100%;
+    max-width:620px;
+    max-height:calc(100vh - 48px);
+    padding:34px;
+    box-sizing:border-box;
+    background:#111;
+    color:#f5f5f5;
+    border:1px solid #303030;
+    border-radius:18px;
+    box-shadow:0 30px 100px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.02);
+}
+
+.checkin-modal h2{
+    margin:0;
+    color:#f5f5f5;
+    font-size:30px;
+    font-weight:800;
+    letter-spacing:-1px;
+}
+
+.checkin-members{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.checkin-member-card{
+    width:100%;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px;
+    font:inherit;
+    text-align:left;
+    background:#181818;
+    color:#f5f5f5;
+    border:1px solid #303030;
+    border-radius:12px;
+    cursor:pointer;
+    transition:border-color .2s ease, transform .2s ease, background .2s ease;
+}
+
+.checkin-member-card:hover{
+    background:#1b1b1b;
+    border-color:var(--lime);
+    transform:translateY(-2px);
+}
+
+.checkin-member-card:focus-visible{
+    outline:none;
+    border-color:var(--lime);
+    box-shadow:0 0 0 3px rgba(186,255,0,.12);
+}
+
+.checkin-member-card:disabled{
+    cursor:not-allowed;
+    opacity:.55;
+}
+
+.checkin-member-card:disabled:hover{
+    background:#181818;
+    border-color:#303030;
+    transform:none;
+}
+
+.member-avatar{
+    flex-shrink:0;
+    color:#080808;
+}
+
+.checkin-info small{
+    font-size:12px;
+}
+
+.checkin-btn{
+    padding:9px 14px;
+    border-radius:8px;
+    color:#080808;
+    font-size:12px;
+    white-space:nowrap;
+}
+
+.checkin-member-card:disabled .checkin-btn{
+    background:#282828;
+    color:#888;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+
+@media(max-width:1100px){
+
+
+.owner-sidebar{
+
+    width:210px;
+
+}
+
+
+.owner-main{
+
+    margin-left:210px;
+
+    padding:30px;
+
+}
+
+
+
+.overview-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+
+.dashboard-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+}
+
+
+
+
+
+@media(max-width:700px){
+
+
+.owner-sidebar{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+
+
+.owner-main{
+
+    margin-left:0;
+
+    padding:20px;
+
+}
+
+
+
+.overview-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.dashboard-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.add-member-row{
+
+    grid-template-columns:1fr;
+
+}
+
+
+}
+
