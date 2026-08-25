@@ -5,15 +5,17 @@ function Home({
   onLoginRequired,
   onLogout
 }) {
+
   const isLoggedIn = !!user;
   const [insideMembers, setInsideMembers] = useState(0);
-
 const capacity = 80;
 
   const [showBMI, setShowBMI] = useState(false);
   const [bmiHeight, setBmiHeight] = useState("");
   const [bmiWeight, setBmiWeight] = useState("");
   const [bmiResult, setBmiResult] = useState(null);
+
+  // ================= NUTRITION STATE =================
   const [showNutrition, setShowNutrition] = useState(false);
   const [showNutritionForm, setShowNutritionForm] = useState(false);
   const [nutritionLoading, setNutritionLoading] = useState(false);
@@ -27,6 +29,7 @@ const capacity = 80;
     activityLevel: "moderate",
     goal: "build_muscle",
   });
+
 
 useEffect(() => {
   const fetchCapacity = async () => {
@@ -90,9 +93,7 @@ useEffect(() => {
       return;
     }
 
-    const loggedInEmail = user?.email?.trim();
-
-    if (!loggedInEmail) {
+    if (!user?.id) {
       alert("Please login again.");
       return;
     }
@@ -100,63 +101,19 @@ useEffect(() => {
     try {
       setNutritionLoading(true);
 
-      /*
-       * Prefer a member id already attached to the logged-in user.
-       * Different versions of the login response may use different keys,
-       * so we support all of them.
-       */
-      let memberId =
-        user?.memberId ||
-        user?.member?._id ||
-        user?.member?.id ||
-        null;
+      const memberRes = await fetch(
+        `http://localhost:5001/api/members/user/${user.id}`
+      );
 
-      /*
-       * If login does not contain memberId, resolve the member from the
-       * members collection using a normalized email.
-       */
-      if (!memberId) {
-        const membersRes = await fetch(
-          "http://localhost:5001/api/members"
-        );
+      const memberData = await memberRes.json();
 
-        const membersData = await membersRes.json();
-
-        if (!membersRes.ok) {
-          throw new Error(
-            membersData.message ||
-              "Unable to load member profiles"
-          );
-        }
-
-        const members = Array.isArray(membersData)
-          ? membersData
-          : Array.isArray(membersData.members)
-            ? membersData.members
-            : [];
-
-        const normalizedEmail = loggedInEmail.toLowerCase();
-
-        const member = members.find((item) => {
-          const memberEmail = item?.email?.trim()?.toLowerCase();
-          return memberEmail === normalizedEmail;
-        });
-
-        memberId = member?._id || member?.id || null;
-      }
-
-      if (!memberId) {
-        console.error("Nutrition member lookup failed", {
-          loggedInUser: user,
-          loggedInEmail,
-        });
-
+      if (!memberRes.ok || !memberData?.member?._id) {
         throw new Error(
-          "Your login account is not linked to a member profile. Please login with your member account."
+          memberData?.message || "Member profile not found"
         );
       }
 
-      const res = await fetch(
+      const response = await fetch(
         "http://localhost:5001/api/nutrition",
         {
           method: "POST",
@@ -164,23 +121,22 @@ useEffect(() => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            member: memberId,
-            age: Number(nutritionForm.age),
+            member: memberData.member._id,
+            age: nutritionForm.age,
             gender: nutritionForm.gender,
-            height: Number(nutritionForm.height),
-            weight: Number(nutritionForm.weight),
+            height: nutritionForm.height,
+            weight: nutritionForm.weight,
             activityLevel: nutritionForm.activityLevel,
             goal: nutritionForm.goal,
           }),
         }
       );
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error(
-          data.message ||
-            "Unable to create nutrition plan"
+          data?.message || "Unable to create nutrition plan"
         );
       }
 
@@ -188,10 +144,7 @@ useEffect(() => {
       setShowNutritionForm(false);
     } catch (error) {
       console.error("Nutrition plan error:", error);
-      alert(
-        error.message ||
-          "Could not create nutrition plan."
-      );
+      alert(error.message || "Unable to create nutrition plan.");
     } finally {
       setNutritionLoading(false);
     }
@@ -684,9 +637,12 @@ useEffect(() => {
           </p>
 
 
-         <div className="feature-link">
-  Explore Nutrition →
-</div>
+          <div
+            className="feature-link"
+            onClick={() => handleFeatureClick("nutrition")}
+          >
+            Explore Nutrition →
+          </div>
 
         </div>
 
@@ -1185,6 +1141,8 @@ useEffect(() => {
       </div>
     )}
 
+    {/* ================= NUTRITION PLAN ================= */}
+
     {showNutrition && (
       <div
         onClick={() => setShowNutrition(false)}
@@ -1245,51 +1203,138 @@ useEffect(() => {
           </p>
 
           {nutritionResult ? (
-            <div
-              style={{
-                marginTop: "28px",
-                padding: "24px",
-                background: "#181818",
-                border: "1px solid #333",
-                borderRadius: "14px",
-              }}
-            >
-              <h3 style={{ marginTop: 0 }}>Your plan is ready.</h3>
-
+            <div style={{ marginTop: "28px" }}>
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: "12px",
-                  marginTop: "18px",
+                  padding: "24px",
+                  background: "#181818",
+                  border: "1px solid #333",
+                  borderRadius: "14px",
+                  marginBottom: "18px",
                 }}
               >
-                <div>
-                  <strong>{nutritionResult.dailyCalories}</strong>
-                  <br />
-                  Calories / day
-                </div>
-                <div>
-                  <strong>{nutritionResult.protein}g</strong>
-                  <br />
-                  Protein
-                </div>
-                <div>
-                  <strong>{nutritionResult.carbs}g</strong>
-                  <br />
-                  Carbs
-                </div>
-                <div>
-                  <strong>{nutritionResult.fats}g</strong>
-                  <br />
-                  Fats
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#aaa",
+                    fontSize: "13px",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  DAILY TARGET
+                </p>
+
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "42px",
+                    marginTop: "8px",
+                  }}
+                >
+                  {nutritionResult.dailyCalories}
+                </strong>
+
+                <span style={{ color: "#aaa" }}>kcal / day</span>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "12px",
+                    marginTop: "20px",
+                  }}
+                >
+                  <div>
+                    <strong>{nutritionResult.protein}g</strong>
+                    <br />
+                    <span style={{ color: "#888" }}>Protein</span>
+                  </div>
+
+                  <div>
+                    <strong>{nutritionResult.carbs}g</strong>
+                    <br />
+                    <span style={{ color: "#888" }}>Carbs</span>
+                  </div>
+
+                  <div>
+                    <strong>{nutritionResult.fats}g</strong>
+                    <br />
+                    <span style={{ color: "#888" }}>Fats</span>
+                  </div>
                 </div>
               </div>
+
+              <h3 style={{ marginBottom: "14px" }}>
+                Your Meal Plan
+              </h3>
+
+              {Array.isArray(nutritionResult.mealPlan) &&
+              nutritionResult.mealPlan.length > 0 ? (
+                nutritionResult.mealPlan.map((meal, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: "20px",
+                      background: "#181818",
+                      border: "1px solid #333",
+                      borderRadius: "14px",
+                      marginBottom: "12px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: "14px",
+                        gap: "12px",
+                      }}
+                    >
+                      <strong style={{ fontSize: "18px" }}>
+                        {meal.meal}
+                      </strong>
+
+                      <span style={{ color: "#b6ff00" }}>
+                        {meal.calories} kcal
+                      </span>
+                    </div>
+
+                    {Array.isArray(meal.foods) &&
+                      meal.foods.map((food, foodIndex) => (
+                        <div
+                          key={foodIndex}
+                          style={{
+                            padding: "9px 0",
+                            borderBottom:
+                              foodIndex !== meal.foods.length - 1
+                                ? "1px solid #292929"
+                                : "none",
+                            color: "#ccc",
+                          }}
+                        >
+                          • {food}
+                        </div>
+                      ))}
+                  </div>
+                ))
+              ) : (
+                <div
+                  style={{
+                    padding: "18px",
+                    background: "#181818",
+                    border: "1px solid #333",
+                    borderRadius: "14px",
+                    color: "#aaa",
+                  }}
+                >
+                  Meal plan data is not available.
+                </div>
+              )}
 
               <button
                 type="button"
                 className="primary-btn"
-                style={{ marginTop: "24px" }}
+                style={{ marginTop: "12px" }}
                 onClick={() => {
                   setNutritionResult(null);
                   setShowNutrition(false);
@@ -1309,7 +1354,10 @@ useEffect(() => {
               </button>
             </div>
           ) : (
-            <form onSubmit={createNutritionPlan} style={{ marginTop: "28px" }}>
+            <form
+              onSubmit={createNutritionPlan}
+              style={{ marginTop: "28px" }}
+            >
               <div
                 style={{
                   display: "grid",
@@ -1475,7 +1523,9 @@ useEffect(() => {
                   cursor: nutritionLoading ? "not-allowed" : "pointer",
                 }}
               >
-                {nutritionLoading ? "CREATING..." : "GENERATE MY PLAN →"}
+                {nutritionLoading
+                  ? "CREATING..."
+                  : "GENERATE MY PLAN →"}
               </button>
             </form>
           )}
@@ -1504,5 +1554,6 @@ useEffect(() => {
   );
 
 }
+
 
 export default Home;

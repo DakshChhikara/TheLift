@@ -39,14 +39,11 @@ router.post("/", async (req, res) => {
     // FIND MEMBER
     // ========================================
 
-    // Frontend sends logged-in USER ID.
-    // Member model stores that ID inside userId.
     let foundMember = await Member.findOne({
       userId: member,
     });
 
     // Also allow actual Member ID
-    // This makes the route work with either ID.
     if (!foundMember) {
       foundMember = await Member.findById(member);
     }
@@ -124,9 +121,9 @@ router.post("/", async (req, res) => {
     const numericWeight = Number(weight);
 
     const protein = Math.round(numericWeight * 1.6);
-    const proteinCalories = protein * 4;
-
     const fats = Math.round(numericWeight * 0.8);
+
+    const proteinCalories = protein * 4;
     const fatCalories = fats * 9;
 
     const remainingCalories =
@@ -138,6 +135,179 @@ router.post("/", async (req, res) => {
       0,
       Math.round(remainingCalories / 4)
     );
+
+    // ========================================
+    // MEAL PLAN
+    // ========================================
+
+    let mealPlan;
+
+    if (goal === "lose_weight") {
+      mealPlan = [
+        {
+          meal: "Breakfast",
+          foods: [
+            "3 egg whites + 1 whole egg",
+            "40g oats",
+            "1 apple",
+          ],
+          calories: Math.round(dailyCalories * 0.25),
+        },
+        {
+          meal: "Lunch",
+          foods: [
+            "150g grilled chicken",
+            "100g cooked rice",
+            "Mixed vegetables",
+            "Curd",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+        {
+          meal: "Evening Snack",
+          foods: [
+            "Greek yogurt",
+            "10 almonds",
+            "1 fruit",
+          ],
+          calories: Math.round(dailyCalories * 0.15),
+        },
+        {
+          meal: "Dinner",
+          foods: [
+            "150g grilled chicken/fish",
+            "100g cooked rice or 2 small rotis",
+            "Large serving of vegetables",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+      ];
+    } else if (goal === "build_muscle") {
+      mealPlan = [
+        {
+          meal: "Breakfast",
+          foods: [
+            "3 whole eggs",
+            "60g oats",
+            "1 banana",
+            "250ml milk",
+          ],
+          calories: Math.round(dailyCalories * 0.25),
+        },
+        {
+          meal: "Lunch",
+          foods: [
+            "180g chicken",
+            "150g cooked rice",
+            "Mixed vegetables",
+            "Curd",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+        {
+          meal: "Evening Snack",
+          foods: [
+            "Protein shake",
+            "1 banana",
+            "20g peanut butter",
+          ],
+          calories: Math.round(dailyCalories * 0.15),
+        },
+        {
+          meal: "Dinner",
+          foods: [
+            "180g chicken/fish/paneer",
+            "150g cooked rice or 3 rotis",
+            "Mixed vegetables",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+      ];
+    } else if (goal === "gain_weight") {
+      mealPlan = [
+        {
+          meal: "Breakfast",
+          foods: [
+            "4 whole eggs",
+            "80g oats",
+            "1 banana",
+            "300ml milk",
+          ],
+          calories: Math.round(dailyCalories * 0.25),
+        },
+        {
+          meal: "Lunch",
+          foods: [
+            "200g chicken/paneer",
+            "200g cooked rice",
+            "Vegetables",
+            "Curd",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+        {
+          meal: "Evening Snack",
+          foods: [
+            "Protein shake",
+            "1 banana",
+            "30g peanut butter",
+            "Handful of nuts",
+          ],
+          calories: Math.round(dailyCalories * 0.15),
+        },
+        {
+          meal: "Dinner",
+          foods: [
+            "200g chicken/paneer",
+            "200g cooked rice or 3 rotis",
+            "Vegetables",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+      ];
+    } else {
+      // Maintain weight
+      mealPlan = [
+        {
+          meal: "Breakfast",
+          foods: [
+            "3 whole eggs",
+            "50g oats",
+            "1 banana",
+            "250ml milk",
+          ],
+          calories: Math.round(dailyCalories * 0.25),
+        },
+        {
+          meal: "Lunch",
+          foods: [
+            "150g chicken/paneer",
+            "150g cooked rice",
+            "Mixed vegetables",
+            "Curd",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+        {
+          meal: "Evening Snack",
+          foods: [
+            "Greek yogurt",
+            "1 fruit",
+            "15g almonds",
+          ],
+          calories: Math.round(dailyCalories * 0.15),
+        },
+        {
+          meal: "Dinner",
+          foods: [
+            "150g chicken/fish/paneer",
+            "150g cooked rice or 2 rotis",
+            "Mixed vegetables",
+          ],
+          calories: Math.round(dailyCalories * 0.30),
+        },
+      ];
+    }
 
     // ========================================
     // SAVE / UPDATE PLAN
@@ -160,6 +330,7 @@ router.post("/", async (req, res) => {
           protein,
           carbs,
           fats,
+          mealPlan,
         },
         {
           new: true,
@@ -169,8 +340,13 @@ router.post("/", async (req, res) => {
 
     return res.status(200).json({
       message: "Nutrition plan created successfully",
-      nutritionPlan,
+
+      nutritionPlan: {
+        ...nutritionPlan.toObject(),
+        mealPlan,
+      },
     });
+
   } catch (error) {
     console.error("NUTRITION ERROR:", error);
 
@@ -193,7 +369,9 @@ router.get("/:memberId", async (req, res) => {
     });
 
     if (!member) {
-      member = await Member.findById(req.params.memberId);
+      member = await Member.findById(
+        req.params.memberId
+      );
     }
 
     if (!member) {
@@ -216,12 +394,15 @@ router.get("/:memberId", async (req, res) => {
     return res.json({
       nutritionPlan,
     });
+
   } catch (error) {
-    console.error("GET NUTRITION ERROR:", error);
+    console.error(
+      "GET NUTRITION ERROR:",
+      error
+    );
 
     return res.status(500).json({
       message: "Unable to get nutrition plan",
-      error: error.message,
     });
   }
 });
