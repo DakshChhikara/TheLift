@@ -5,15 +5,28 @@ function Home({
   onLoginRequired,
   onLogout
 }) {
-
   const isLoggedIn = !!user;
   const [insideMembers, setInsideMembers] = useState(0);
+
 const capacity = 80;
 
   const [showBMI, setShowBMI] = useState(false);
   const [bmiHeight, setBmiHeight] = useState("");
   const [bmiWeight, setBmiWeight] = useState("");
   const [bmiResult, setBmiResult] = useState(null);
+  const [showNutrition, setShowNutrition] = useState(false);
+  const [showNutritionForm, setShowNutritionForm] = useState(false);
+  const [nutritionLoading, setNutritionLoading] = useState(false);
+  const [nutritionResult, setNutritionResult] = useState(null);
+
+  const [nutritionForm, setNutritionForm] = useState({
+    age: "",
+    gender: "male",
+    height: "",
+    weight: "",
+    activityLevel: "moderate",
+    goal: "build_muscle",
+  });
 
 useEffect(() => {
   const fetchCapacity = async () => {
@@ -49,6 +62,139 @@ useEffect(() => {
       setShowBMI(true);
     }
 
+    if (feature === "nutrition") {
+      setNutritionResult(null);
+      setShowNutritionForm(false);
+      setShowNutrition(true);
+    }
+
+  };
+
+  const handleNutritionChange = (e) => {
+    const { name, value } = e.target;
+    setNutritionForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const createNutritionPlan = async (e) => {
+    e.preventDefault();
+
+    if (
+      !nutritionForm.age ||
+      !nutritionForm.height ||
+      !nutritionForm.weight
+    ) {
+      alert("Please fill all nutrition details.");
+      return;
+    }
+
+    const loggedInEmail = user?.email?.trim();
+
+    if (!loggedInEmail) {
+      alert("Please login again.");
+      return;
+    }
+
+    try {
+      setNutritionLoading(true);
+
+      /*
+       * Prefer a member id already attached to the logged-in user.
+       * Different versions of the login response may use different keys,
+       * so we support all of them.
+       */
+      let memberId =
+        user?.memberId ||
+        user?.member?._id ||
+        user?.member?.id ||
+        null;
+
+      /*
+       * If login does not contain memberId, resolve the member from the
+       * members collection using a normalized email.
+       */
+      if (!memberId) {
+        const membersRes = await fetch(
+          "http://localhost:5001/api/members"
+        );
+
+        const membersData = await membersRes.json();
+
+        if (!membersRes.ok) {
+          throw new Error(
+            membersData.message ||
+              "Unable to load member profiles"
+          );
+        }
+
+        const members = Array.isArray(membersData)
+          ? membersData
+          : Array.isArray(membersData.members)
+            ? membersData.members
+            : [];
+
+        const normalizedEmail = loggedInEmail.toLowerCase();
+
+        const member = members.find((item) => {
+          const memberEmail = item?.email?.trim()?.toLowerCase();
+          return memberEmail === normalizedEmail;
+        });
+
+        memberId = member?._id || member?.id || null;
+      }
+
+      if (!memberId) {
+        console.error("Nutrition member lookup failed", {
+          loggedInUser: user,
+          loggedInEmail,
+        });
+
+        throw new Error(
+          "Your login account is not linked to a member profile. Please login with your member account."
+        );
+      }
+
+      const res = await fetch(
+        "http://localhost:5001/api/nutrition",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            member: memberId,
+            age: Number(nutritionForm.age),
+            gender: nutritionForm.gender,
+            height: Number(nutritionForm.height),
+            weight: Number(nutritionForm.weight),
+            activityLevel: nutritionForm.activityLevel,
+            goal: nutritionForm.goal,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(
+          data.message ||
+            "Unable to create nutrition plan"
+        );
+      }
+
+      setNutritionResult(data.nutritionPlan);
+      setShowNutritionForm(false);
+    } catch (error) {
+      console.error("Nutrition plan error:", error);
+      alert(
+        error.message ||
+          "Could not create nutrition plan."
+      );
+    } finally {
+      setNutritionLoading(false);
+    }
   };
 
   const calculateBMI = () => {
@@ -508,7 +654,11 @@ useEffect(() => {
       <div className="member-feature-grid">
         {/* 01 NUTRITION */}
 
-        <div className="member-feature-card large">
+        <div
+          className="member-feature-card large"
+          onClick={() => handleFeatureClick("nutrition")}
+          style={{ cursor: "pointer" }}
+        >
 
           <div className="feature-card-top">
 
@@ -534,12 +684,9 @@ useEffect(() => {
           </p>
 
 
-          <div
-            className="feature-link"
-            onClick={handleFeatureClick}
-          >
-            Explore Nutrition →
-          </div>
+         <div className="feature-link">
+  Explore Nutrition →
+</div>
 
         </div>
 
@@ -1038,6 +1185,304 @@ useEffect(() => {
       </div>
     )}
 
+    {showNutrition && (
+      <div
+        onClick={() => setShowNutrition(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.75)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+          padding: "20px",
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "100%",
+            maxWidth: "600px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            background: "#111",
+            border: "1px solid #333",
+            borderRadius: "20px",
+            padding: "40px",
+            position: "relative",
+            color: "white",
+            boxSizing: "border-box",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowNutrition(false)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "transparent",
+              border: "none",
+              color: "white",
+              fontSize: "28px",
+              cursor: "pointer",
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+
+          <p className="section-label">NUTRITION PLAN</p>
+
+          <h2>
+            Fuel your <span>progress.</span>
+          </h2>
+
+          <p>
+            Create a personalized nutrition plan based on your body,
+            activity level and fitness goal.
+          </p>
+
+          {nutritionResult ? (
+            <div
+              style={{
+                marginTop: "28px",
+                padding: "24px",
+                background: "#181818",
+                border: "1px solid #333",
+                borderRadius: "14px",
+              }}
+            >
+              <h3 style={{ marginTop: 0 }}>Your plan is ready.</h3>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "12px",
+                  marginTop: "18px",
+                }}
+              >
+                <div>
+                  <strong>{nutritionResult.dailyCalories}</strong>
+                  <br />
+                  Calories / day
+                </div>
+                <div>
+                  <strong>{nutritionResult.protein}g</strong>
+                  <br />
+                  Protein
+                </div>
+                <div>
+                  <strong>{nutritionResult.carbs}g</strong>
+                  <br />
+                  Carbs
+                </div>
+                <div>
+                  <strong>{nutritionResult.fats}g</strong>
+                  <br />
+                  Fats
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="primary-btn"
+                style={{ marginTop: "24px" }}
+                onClick={() => {
+                  setNutritionResult(null);
+                  setShowNutrition(false);
+                }}
+              >
+                DONE →
+              </button>
+            </div>
+          ) : !showNutritionForm ? (
+            <div style={{ marginTop: "30px" }}>
+              <button
+                type="button"
+                className="primary-btn"
+                onClick={() => setShowNutritionForm(true)}
+              >
+                CREATE NUTRITION PLAN →
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={createNutritionPlan} style={{ marginTop: "28px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                }}
+              >
+                <div className="input-group">
+                  <label>AGE</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    max="120"
+                    name="age"
+                    placeholder="e.g. 22"
+                    value={nutritionForm.age}
+                    onChange={handleNutritionChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>GENDER</label>
+                  <select
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    name="gender"
+                    value={nutritionForm.gender}
+                    onChange={handleNutritionChange}
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+
+                <div className="input-group">
+                  <label>HEIGHT (CM)</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    name="height"
+                    placeholder="e.g. 175"
+                    value={nutritionForm.height}
+                    onChange={handleNutritionChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>WEIGHT (KG)</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    name="weight"
+                    placeholder="e.g. 70"
+                    value={nutritionForm.weight}
+                    onChange={handleNutritionChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginTop: "18px" }}>
+                <label>ACTIVITY LEVEL</label>
+                <select
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    marginTop: "8px",
+                    padding: "14px 16px",
+                    background: "#1a1a1a",
+                    border: "1px solid #333",
+                    borderRadius: "10px",
+                    color: "white",
+                    fontSize: "16px",
+                  }}
+                  name="activityLevel"
+                  value={nutritionForm.activityLevel}
+                  onChange={handleNutritionChange}
+                >
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Light Activity</option>
+                  <option value="moderate">Moderate Activity</option>
+                  <option value="active">Active</option>
+                  <option value="very_active">Very Active</option>
+                </select>
+              </div>
+
+              <div style={{ marginTop: "18px" }}>
+                <label>FITNESS GOAL</label>
+                <select
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    marginTop: "8px",
+                    padding: "14px 16px",
+                    background: "#1a1a1a",
+                    border: "1px solid #333",
+                    borderRadius: "10px",
+                    color: "white",
+                    fontSize: "16px",
+                  }}
+                  name="goal"
+                  value={nutritionForm.goal}
+                  onChange={handleNutritionChange}
+                >
+                  <option value="lose_weight">Lose Weight</option>
+                  <option value="maintain">Maintain Weight</option>
+                  <option value="gain_weight">Gain Weight</option>
+                  <option value="build_muscle">Build Muscle</option>
+                </select>
+              </div>
+
+              <button
+                className="primary-btn"
+                type="submit"
+                disabled={nutritionLoading}
+                style={{
+                  marginTop: "26px",
+                  opacity: nutritionLoading ? 0.7 : 1,
+                  cursor: nutritionLoading ? "not-allowed" : "pointer",
+                }}
+              >
+                {nutritionLoading ? "CREATING..." : "GENERATE MY PLAN →"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    )}
+
     <footer>
 
       <div>
@@ -1059,6 +1504,5 @@ useEffect(() => {
   );
 
 }
-
 
 export default Home;
