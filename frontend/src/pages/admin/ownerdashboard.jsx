@@ -2460,7 +2460,7 @@ const handleCheckInToggle = async (member) => {
             <div className="owner-avatar">O</div>
 
             <div>
-              <strong>The Lift Owner</strong>
+              <strong>The Lift</strong> <br />
               <span>Owner</span>
             </div>
           </div>

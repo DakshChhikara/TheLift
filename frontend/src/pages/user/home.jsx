@@ -48,6 +48,53 @@ const [calorieResult, setCalorieResult] = useState(null);
   const [currentWeight, setCurrentWeight] = useState("");
   const [targetWeight, setTargetWeight] = useState("");
 
+  // ================= PROGRESS TRACKING STATE =================
+  const [showProgress, setShowProgress] = useState(false);
+  const [progressLoading, setProgressLoading] = useState(false);
+  const [progressHistory, setProgressHistory] = useState([]);
+  const [progressWeight, setProgressWeight] = useState("");
+  const [progressMeasurements, setProgressMeasurements] = useState({
+    chest: "",
+    waist: "",
+    arms: "",
+  });
+
+  // ================= WORKOUT STATE =================
+  const [showWorkouts, setShowWorkouts] = useState(false);
+  const [selectedWorkoutDay, setSelectedWorkoutDay] = useState("Push");
+
+  const workoutPlans = {
+    Push: [
+      ["Bench Press", "4 × 8–10"],
+      ["Incline Dumbbell Press", "3 × 10–12"],
+      ["Shoulder Press", "3 × 8–10"],
+      ["Lateral Raises", "3 × 12–15"],
+      ["Triceps Pushdown", "3 × 10–12"],
+    ],
+    Pull: [
+      ["Lat Pulldown", "4 × 8–12"],
+      ["Barbell Row", "3 × 8–10"],
+      ["Seated Cable Row", "3 × 10–12"],
+      ["Face Pulls", "3 × 12–15"],
+      ["Biceps Curls", "3 × 10–12"],
+    ],
+    Legs: [
+      ["Squats", "4 × 6–10"],
+      ["Romanian Deadlift", "3 × 8–10"],
+      ["Leg Press", "3 × 10–12"],
+      ["Leg Curl", "3 × 10–12"],
+      ["Calf Raises", "4 × 12–15"],
+    ],
+    "Full Body": [
+      ["Squats", "3 × 8–10"],
+      ["Bench Press", "3 × 8–10"],
+      ["Lat Pulldown", "3 × 10–12"],
+      ["Shoulder Press", "3 × 10"],
+      ["Plank", "3 × 30–60 sec"],
+    ],
+  };
+
+
 
 useEffect(() => {
   const fetchCapacity = async () => {
@@ -98,6 +145,106 @@ useEffect(() => {
       loadTargetWeight();
     }
 
+    if (feature === "workouts") {
+      setSelectedWorkoutDay("Push");
+      setShowWorkouts(true);
+    }
+
+    if (feature === "progress") {
+      openProgress();
+    }
+
+  };
+
+  const loadProgress = async () => {
+    if (!user?.id) return;
+
+    try {
+      setProgressLoading(true);
+
+      const saved = localStorage.getItem(`lift_progress_${user.id}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setProgressHistory(parsed);
+        }
+      }
+    } catch (error) {
+      console.error("Progress load error:", error);
+    } finally {
+      setProgressLoading(false);
+    }
+  };
+
+  const openProgress = async () => {
+    setProgressWeight("");
+    setProgressMeasurements({
+      chest: "",
+      waist: "",
+      arms: "",
+    });
+    await loadProgress();
+    setShowProgress(true);
+  };
+
+  const saveProgressEntry = (e) => {
+    e.preventDefault();
+
+    const weight = Number(progressWeight);
+
+    if (!weight || weight <= 0) {
+      alert("Enter a valid weight.");
+      return;
+    }
+
+    const entry = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      weight,
+      measurements: {
+        chest: progressMeasurements.chest
+          ? Number(progressMeasurements.chest)
+          : null,
+        waist: progressMeasurements.waist
+          ? Number(progressMeasurements.waist)
+          : null,
+        arms: progressMeasurements.arms
+          ? Number(progressMeasurements.arms)
+          : null,
+      },
+    };
+
+    const updated = [...progressHistory, entry].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    setProgressHistory(updated);
+
+    if (user?.id) {
+      localStorage.setItem(
+        `lift_progress_${user.id}`,
+        JSON.stringify(updated)
+      );
+    }
+
+    setProgressWeight("");
+    setProgressMeasurements({
+      chest: "",
+      waist: "",
+      arms: "",
+    });
+  };
+
+  const deleteProgressEntry = (id) => {
+    const updated = progressHistory.filter((entry) => entry.id !== id);
+    setProgressHistory(updated);
+
+    if (user?.id) {
+      localStorage.setItem(
+        `lift_progress_${user.id}`,
+        JSON.stringify(updated)
+      );
+    }
   };
 
   const loadTargetWeight = async () => {
@@ -958,7 +1105,11 @@ useEffect(() => {
 
         {/* 05 WORKOUT */}
 
-        <div className="member-feature-card">
+        <div
+          className="member-feature-card"
+          onClick={() => handleFeatureClick("workouts")}
+          style={{ cursor: "pointer" }}
+        >
 
           <div className="feature-card-top">
 
@@ -986,7 +1137,10 @@ useEffect(() => {
 
           <div
             className="feature-link"
-            onClick={() => handleFeatureClick("workouts")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleFeatureClick("workouts");
+            }}
           >
             View Workouts →
           </div>
@@ -998,7 +1152,11 @@ useEffect(() => {
 
         {/* 06 PROGRESS */}
 
-        <div className="member-feature-card">
+        <div
+          className="member-feature-card"
+          onClick={() => handleFeatureClick("progress")}
+          style={{ cursor: "pointer" }}
+        >
 
           <div className="feature-card-top">
 
@@ -1026,7 +1184,10 @@ useEffect(() => {
 
           <div
             className="feature-link"
-            onClick={() => handleFeatureClick("progress")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleFeatureClick("progress");
+            }}
           >
             Track Progress →
           </div>
@@ -1196,6 +1357,378 @@ useEffect(() => {
 
 
 
+
+    {/* ================= PROGRESS TRACKING ================= */}
+
+    {showProgress && (
+      <div
+        onClick={() => setShowProgress(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.75)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+          padding: "20px",
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "100%",
+            maxWidth: "650px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            background: "#111",
+            border: "1px solid #333",
+            borderRadius: "20px",
+            padding: "40px",
+            position: "relative",
+            color: "white",
+            boxSizing: "border-box",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowProgress(false)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "transparent",
+              border: "none",
+              color: "white",
+              fontSize: "28px",
+              cursor: "pointer",
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+
+          <p className="section-label">PROGRESS TRACKING</p>
+
+          <h2>
+            Track your <span>progress.</span>
+          </h2>
+
+          <p>
+            Log your weight and measurements to see how your body changes over
+            time.
+          </p>
+
+          {(() => {
+            const first = progressHistory[0];
+            const latest = progressHistory[progressHistory.length - 1];
+
+            const weightChange =
+              first && latest
+                ? Number((latest.weight - first.weight).toFixed(1))
+                : 0;
+
+            const target = Number(targetWeightData?.targetWeight);
+            const latestWeight = latest?.weight;
+
+            return (
+              <>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: "12px",
+                    marginTop: "28px",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "18px",
+                      background: "#181818",
+                      border: "1px solid #333",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    <span style={{ color: "#888", fontSize: "12px" }}>
+                      CURRENT
+                    </span>
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: "26px",
+                        marginTop: "6px",
+                      }}
+                    >
+                      {latestWeight ? `${latestWeight} kg` : "—"}
+                    </strong>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "18px",
+                      background: "#181818",
+                      border: "1px solid #333",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    <span style={{ color: "#888", fontSize: "12px" }}>
+                      TARGET
+                    </span>
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: "26px",
+                        marginTop: "6px",
+                      }}
+                    >
+                      {target ? `${target} kg` : "—"}
+                    </strong>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "18px",
+                      background: "#181818",
+                      border: "1px solid #333",
+                      borderRadius: "12px",
+                    }}
+                  >
+                    <span style={{ color: "#888", fontSize: "12px" }}>
+                      CHANGE
+                    </span>
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: "26px",
+                        marginTop: "6px",
+                      }}
+                    >
+                      {progressHistory.length > 1
+                        ? `${weightChange > 0 ? "+" : ""}${weightChange} kg`
+                        : "—"}
+                    </strong>
+                  </div>
+                </div>
+
+                <form
+                  onSubmit={saveProgressEntry}
+                  style={{ marginTop: "28px" }}
+                >
+                  <h3 style={{ marginBottom: "16px" }}>Add Progress</h3>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "14px",
+                    }}
+                  >
+                    <div className="input-group">
+                      <label>WEIGHT (KG)</label>
+                      <input
+                        style={{
+                          width: "100%",
+                          boxSizing: "border-box",
+                          marginTop: "8px",
+                          padding: "14px 16px",
+                          background: "#1a1a1a",
+                          border: "1px solid #333",
+                          borderRadius: "10px",
+                          color: "white",
+                          fontSize: "16px",
+                        }}
+                        type="number"
+                        min="1"
+                        step="0.1"
+                        placeholder="e.g. 72.5"
+                        value={progressWeight}
+                        onChange={(e) => setProgressWeight(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="input-group">
+                      <label>CHEST (CM)</label>
+                      <input
+                        style={{
+                          width: "100%",
+                          boxSizing: "border-box",
+                          marginTop: "8px",
+                          padding: "14px 16px",
+                          background: "#1a1a1a",
+                          border: "1px solid #333",
+                          borderRadius: "10px",
+                          color: "white",
+                          fontSize: "16px",
+                        }}
+                        type="number"
+                        min="1"
+                        step="0.1"
+                        placeholder="Optional"
+                        value={progressMeasurements.chest}
+                        onChange={(e) =>
+                          setProgressMeasurements((prev) => ({
+                            ...prev,
+                            chest: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <div className="input-group">
+                      <label>WAIST (CM)</label>
+                      <input
+                        style={{
+                          width: "100%",
+                          boxSizing: "border-box",
+                          marginTop: "8px",
+                          padding: "14px 16px",
+                          background: "#1a1a1a",
+                          border: "1px solid #333",
+                          borderRadius: "10px",
+                          color: "white",
+                          fontSize: "16px",
+                        }}
+                        type="number"
+                        min="1"
+                        step="0.1"
+                        placeholder="Optional"
+                        value={progressMeasurements.waist}
+                        onChange={(e) =>
+                          setProgressMeasurements((prev) => ({
+                            ...prev,
+                            waist: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+
+                    <div className="input-group">
+                      <label>ARMS (CM)</label>
+                      <input
+                        style={{
+                          width: "100%",
+                          boxSizing: "border-box",
+                          marginTop: "8px",
+                          padding: "14px 16px",
+                          background: "#1a1a1a",
+                          border: "1px solid #333",
+                          borderRadius: "10px",
+                          color: "white",
+                          fontSize: "16px",
+                        }}
+                        type="number"
+                        min="1"
+                        step="0.1"
+                        placeholder="Optional"
+                        value={progressMeasurements.arms}
+                        onChange={(e) =>
+                          setProgressMeasurements((prev) => ({
+                            ...prev,
+                            arms: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    className="primary-btn"
+                    type="submit"
+                    style={{ marginTop: "22px" }}
+                  >
+                    SAVE PROGRESS →
+                  </button>
+                </form>
+
+                <div style={{ marginTop: "30px" }}>
+                  <h3 style={{ marginBottom: "14px" }}>Progress History</h3>
+
+                  {progressHistory.length === 0 ? (
+                    <div
+                      style={{
+                        padding: "20px",
+                        background: "#181818",
+                        border: "1px solid #333",
+                        borderRadius: "12px",
+                        color: "#888",
+                      }}
+                    >
+                      No progress entries yet. Add your first check-in above.
+                    </div>
+                  ) : (
+                    [...progressHistory]
+                      .reverse()
+                      .map((entry) => (
+                        <div
+                          key={entry.id}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            gap: "16px",
+                            padding: "16px 18px",
+                            background: "#181818",
+                            border: "1px solid #333",
+                            borderRadius: "12px",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <div>
+                            <strong>{entry.weight} kg</strong>
+                            <div
+                              style={{
+                                color: "#777",
+                                fontSize: "12px",
+                                marginTop: "5px",
+                              }}
+                            >
+                              {new Date(entry.date).toLocaleDateString()}
+                              {entry.measurements?.chest
+                                ? ` • Chest ${entry.measurements.chest} cm`
+                                : ""}
+                              {entry.measurements?.waist
+                                ? ` • Waist ${entry.measurements.waist} cm`
+                                : ""}
+                              {entry.measurements?.arms
+                                ? ` • Arms ${entry.measurements.arms} cm`
+                                : ""}
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => deleteProgressEntry(entry.id)}
+                            style={{
+                              background: "transparent",
+                              border: "1px solid #444",
+                              borderRadius: "8px",
+                              color: "#aaa",
+                              padding: "8px 10px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            DELETE
+                          </button>
+                        </div>
+                      ))
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  className="secondary-btn"
+                  style={{ marginTop: "12px" }}
+                  onClick={() => setShowProgress(false)}
+                >
+                  DONE
+                </button>
+              </>
+            );
+          })()}
+        </div>
+      </div>
+    )}
 
     {/* ================= FOOTER ================= */}
 
@@ -1716,6 +2249,20 @@ useEffect(() => {
                 </div>
               </div>
 
+              <div
+                style={{
+                  marginTop: "18px",
+                  color: "#aaa",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                }}
+              >
+                {Math.abs(
+                  Number(targetWeightData.targetWeight) -
+                  Number(targetWeightData.currentWeight)
+                )} kg to go
+              </div>
+
               <button
                 type="button"
                 className="secondary-btn"
@@ -2195,6 +2742,147 @@ useEffect(() => {
               </button>
             </form>
           )}
+        </div>
+      </div>
+    )}
+
+
+    {/* ================= WORKOUT PLANS ================= */}
+
+    {showWorkouts && (
+      <div
+        onClick={() => setShowWorkouts(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.75)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+          padding: "20px",
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "100%",
+            maxWidth: "620px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            background: "#111",
+            border: "1px solid #333",
+            borderRadius: "20px",
+            padding: "40px",
+            position: "relative",
+            color: "white",
+            boxSizing: "border-box",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowWorkouts(false)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "transparent",
+              border: "none",
+              color: "white",
+              fontSize: "28px",
+              cursor: "pointer",
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+
+          <p className="section-label">WORKOUT PLANS</p>
+
+          <h2>
+            Train with <span>purpose.</span>
+          </h2>
+
+          <p>
+            Follow a structured workout built around your training goals.
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: "8px",
+              marginTop: "28px",
+            }}
+          >
+            {Object.keys(workoutPlans).map((day) => (
+              <button
+                key={day}
+                type="button"
+                onClick={() => setSelectedWorkoutDay(day)}
+                style={{
+                  padding: "12px 8px",
+                  borderRadius: "10px",
+                  border:
+                    selectedWorkoutDay === day
+                      ? "1px solid #b6ff00"
+                      : "1px solid #333",
+                  background:
+                    selectedWorkoutDay === day ? "#1b260d" : "#181818",
+                  color: "white",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                }}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ marginTop: "22px" }}>
+            {workoutPlans[selectedWorkoutDay].map(([exercise, sets], index) => (
+              <div
+                key={exercise}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "16px",
+                  padding: "17px 18px",
+                  background: "#181818",
+                  border: "1px solid #333",
+                  borderRadius: "12px",
+                  marginBottom: "10px",
+                }}
+              >
+                <div>
+                  <span
+                    style={{
+                      color: "#777",
+                      fontSize: "12px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <strong>{exercise}</strong>
+                </div>
+
+                <span style={{ color: "#b6ff00", whiteSpace: "nowrap" }}>
+                  {sets}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="primary-btn"
+            style={{ marginTop: "14px" }}
+            onClick={() => setShowWorkouts(false)}
+          >
+            DONE →
+          </button>
         </div>
       </div>
     )}
