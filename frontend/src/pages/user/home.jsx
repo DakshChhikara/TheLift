@@ -30,6 +30,24 @@ const capacity = 80;
     goal: "build_muscle",
   });
 
+  const [showCalories, setShowCalories] = useState(false);
+const [calorieResult, setCalorieResult] = useState(null);
+  const [calorieForm, setCalorieForm] = useState({
+    age: "",
+    gender: "male",
+    height: "",
+    weight: "",
+    activityLevel: "moderate",
+    goal: "maintain",
+  });
+
+  // ================= TARGET WEIGHT STATE =================
+  const [showTargetWeight, setShowTargetWeight] = useState(false);
+  const [targetWeightLoading, setTargetWeightLoading] = useState(false);
+  const [targetWeightData, setTargetWeightData] = useState(null);
+  const [currentWeight, setCurrentWeight] = useState("");
+  const [targetWeight, setTargetWeight] = useState("");
+
 
 useEffect(() => {
   const fetchCapacity = async () => {
@@ -70,7 +88,87 @@ useEffect(() => {
       setShowNutritionForm(false);
       setShowNutrition(true);
     }
+    if (feature === "calories") {
+  setCalorieResult(null);
+  setShowCalories(true);
+}
 
+    if (feature === "targetWeight") {
+      setShowTargetWeight(true);
+      loadTargetWeight();
+    }
+
+  };
+
+  const loadTargetWeight = async () => {
+    if (!user?.id) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:5001/api/members/user/${user.id}`
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.message || "Unable to load target weight");
+      }
+
+      const member = data.member;
+
+      setTargetWeightData(member);
+      setCurrentWeight(member.currentWeight || "");
+      setTargetWeight(member.targetWeight || "");
+    } catch (error) {
+      console.error("Target weight load error:", error);
+      alert(error.message || "Unable to load target weight.");
+    }
+  };
+
+  const saveTargetWeight = async (e) => {
+    e.preventDefault();
+
+    const current = Number(currentWeight);
+    const target = Number(targetWeight);
+
+    if (!current || current <= 0 || !target || target <= 0) {
+      alert("Enter valid current and target weights.");
+      return;
+    }
+
+    try {
+      setTargetWeightLoading(true);
+
+      const response = await fetch(
+        `http://localhost:5001/api/members/user/${user.id}/target-weight`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            currentWeight: current,
+            targetWeight: target,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data?.message || "Unable to save target weight"
+        );
+      }
+
+      setTargetWeightData(data.member);
+      setCurrentWeight(data.member.currentWeight);
+      setTargetWeight(data.member.targetWeight);
+    } catch (error) {
+      console.error("Target weight save error:", error);
+      alert(error.message || "Unable to save target weight.");
+    } finally {
+      setTargetWeightLoading(false);
+    }
   };
 
   const handleNutritionChange = (e) => {
@@ -148,6 +246,50 @@ useEffect(() => {
     } finally {
       setNutritionLoading(false);
     }
+  };
+
+  const handleCalorieChange = (e) => {
+    const { name, value } = e.target;
+    setCalorieForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const calculateCalories = (e) => {
+    e.preventDefault();
+
+    const age = Number(calorieForm.age);
+    const height = Number(calorieForm.height);
+    const weight = Number(calorieForm.weight);
+
+    if (!age || age <= 0 || !height || height <= 0 || !weight || weight <= 0) {
+      alert("Please enter valid age, height and weight.");
+      return;
+    }
+
+    const bmr =
+      10 * weight +
+      6.25 * height -
+      5 * age +
+      (calorieForm.gender === "male" ? 5 : -161);
+
+    const activityMultipliers = {
+      sedentary: 1.2,
+      light: 1.375,
+      moderate: 1.55,
+      active: 1.725,
+      very_active: 1.9,
+    };
+
+    let calories =
+      bmr * (activityMultipliers[calorieForm.activityLevel] || 1.55);
+
+    if (calorieForm.goal === "lose_weight") calories -= 500;
+    else if (calorieForm.goal === "gain_weight") calories += 300;
+    else if (calorieForm.goal === "build_muscle") calories += 250;
+
+    setCalorieResult(Math.max(1200, Math.round(calories)));
   };
 
   const calculateBMI = () => {
@@ -684,82 +826,133 @@ useEffect(() => {
 
 
         {/* 03 CALORIES */}
+        <div
+  className="member-feature-card"
+  onClick={() => handleFeatureClick("calories")}
+  style={{ cursor: "pointer" }}
+>
+  <div className="feature-card-top">
+    <div className="big-icon">🔥</div>
+    <span>03</span>
+  </div>
 
-        <div className="member-feature-card">
+  <h3>Daily Calories</h3>
 
-          <div className="feature-card-top">
+  <p>
+    Know how many calories you need every day
+    according to your activity and goal.
+  </p>
 
-            <div className="big-icon">
-              🔥
-            </div>
-
-            <span>
-              03
-            </span>
-
-          </div>
-
-
-          <h3>
-            Daily Calories
-          </h3>
-
-
-          <p>
-            Know how many calories you need every day
-            according to your activity and goal.
-          </p>
-
-
-          <div
-            className="feature-link"
-            onClick={handleFeatureClick}
-          >
-            Calculate Calories →
-          </div>
-
-        </div>
-
-
-
-
+  <div
+    className="feature-link"
+    onClick={(e) => {
+      e.stopPropagation();
+      handleFeatureClick("calories");
+    }}
+  >
+    Calculate Calories →
+  </div>
+</div>
         {/* 04 TARGET WEIGHT */}
 
-        <div className="member-feature-card">
+<div
+  className="member-feature-card"
+  onClick={() => handleFeatureClick("targetWeight")}
+  style={{ cursor: "pointer" }}
+>
+  <div className="feature-card-top">
+    <div className="big-icon">
+      🎯
+    </div>
 
-          <div className="feature-card-top">
+    <span>04</span>
+  </div>
 
-            <div className="big-icon">
-              🎯
-            </div>
+  <h3>Target Weight</h3>
 
-            <span>
-              04
-            </span>
-
-          </div>
-
-
-          <h3>
-            Target Weight
-          </h3>
-
-
-          <p>
-            Set your target weight and track how far
-            you are from your goal.
-          </p>
-
-
-          <div
-            className="feature-link"
-            onClick={handleFeatureClick}
+  {targetWeightData?.targetWeight ? (
+    <>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "20px",
+          marginTop: "24px",
+        }}
+      >
+        <div>
+          <span
+            style={{
+              color: "#888",
+              fontSize: "13px",
+            }}
           >
-            Set Your Goal →
-          </div>
+            CURRENT
+          </span>
 
+          <strong
+            style={{
+              display: "block",
+              fontSize: "28px",
+              marginTop: "5px",
+            }}
+          >
+            {targetWeightData.currentWeight} kg
+          </strong>
         </div>
 
+        <div>
+          <span
+            style={{
+              color: "#888",
+              fontSize: "13px",
+            }}
+          >
+            TARGET
+          </span>
+
+          <strong
+            style={{
+              display: "block",
+              fontSize: "28px",
+              marginTop: "5px",
+            }}
+          >
+            {targetWeightData.targetWeight} kg
+          </strong>
+        </div>
+      </div>
+
+          <div
+        className="feature-link"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleFeatureClick("targetWeight");
+        }}
+        style={{ marginTop: "22px" }}
+      >
+        Update Goal →
+      </div>
+    </>
+  ) : (
+    <>
+      <p>
+        Set your target weight and track how far
+        you are from your goal.
+      </p>
+
+      <div
+        className="feature-link"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleFeatureClick("targetWeight");
+        }}
+      >
+        Set Your Goal →
+      </div>
+    </>
+  )}
+</div>
 
 
 
@@ -793,7 +986,7 @@ useEffect(() => {
 
           <div
             className="feature-link"
-            onClick={handleFeatureClick}
+            onClick={() => handleFeatureClick("workouts")}
           >
             View Workouts →
           </div>
@@ -833,7 +1026,7 @@ useEffect(() => {
 
           <div
             className="feature-link"
-            onClick={handleFeatureClick}
+            onClick={() => handleFeatureClick("progress")}
           >
             Track Progress →
           </div>
@@ -1136,6 +1329,479 @@ useEffect(() => {
                 <p>{bmiResult.message}</p>
               )}
             </div>
+          )}
+        </div>
+      </div>
+    )}
+
+    {/* ================= DAILY CALORIES ================= */}
+
+    {showCalories && (
+      <div
+        onClick={() => setShowCalories(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.75)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+          padding: "20px",
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "100%",
+            maxWidth: "550px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            background: "#111",
+            border: "1px solid #333",
+            borderRadius: "20px",
+            padding: "40px",
+            position: "relative",
+            color: "white",
+            boxSizing: "border-box",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowCalories(false)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "transparent",
+              border: "none",
+              color: "white",
+              fontSize: "28px",
+              cursor: "pointer",
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+
+          <p className="section-label">DAILY CALORIES</p>
+
+          <h2>
+            Know your <span>calorie needs.</span>
+          </h2>
+
+          <p>
+            Calculate how many calories you need each day based on your
+            body, activity level and fitness goal.
+          </p>
+
+          {calorieResult !== null ? (
+            <div style={{ marginTop: "28px" }}>
+              <div
+                style={{
+                  padding: "28px",
+                  background: "#181818",
+                  border: "1px solid #333",
+                  borderRadius: "14px",
+                  textAlign: "center",
+                }}
+              >
+                <span
+                  style={{
+                    color: "#aaa",
+                    fontSize: "13px",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  DAILY CALORIE REQUIREMENT
+                </span>
+
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "52px",
+                    marginTop: "10px",
+                  }}
+                >
+                  {calorieResult}
+                </strong>
+
+                <span style={{ color: "#aaa" }}>kcal / day</span>
+              </div>
+
+              <button
+                type="button"
+                className="secondary-btn"
+                style={{ marginTop: "20px" }}
+                onClick={() => setCalorieResult(null)}
+              >
+                CALCULATE AGAIN
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={calculateCalories} style={{ marginTop: "28px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                }}
+              >
+                <div className="input-group">
+                  <label>AGE</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    max="120"
+                    name="age"
+                    placeholder="e.g. 22"
+                    value={calorieForm.age}
+                    onChange={handleCalorieChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>GENDER</label>
+                  <select
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    name="gender"
+                    value={calorieForm.gender}
+                    onChange={handleCalorieChange}
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+
+                <div className="input-group">
+                  <label>HEIGHT (CM)</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    name="height"
+                    placeholder="e.g. 175"
+                    value={calorieForm.height}
+                    onChange={handleCalorieChange}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>WEIGHT (KG)</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    step="0.1"
+                    name="weight"
+                    placeholder="e.g. 70"
+                    value={calorieForm.weight}
+                    onChange={handleCalorieChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginTop: "18px" }}>
+                <label>ACTIVITY LEVEL</label>
+                <select
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    marginTop: "8px",
+                    padding: "14px 16px",
+                    background: "#1a1a1a",
+                    border: "1px solid #333",
+                    borderRadius: "10px",
+                    color: "white",
+                    fontSize: "16px",
+                  }}
+                  name="activityLevel"
+                  value={calorieForm.activityLevel}
+                  onChange={handleCalorieChange}
+                >
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Light Activity</option>
+                  <option value="moderate">Moderate Activity</option>
+                  <option value="active">Active</option>
+                  <option value="very_active">Very Active</option>
+                </select>
+              </div>
+
+              <div style={{ marginTop: "18px" }}>
+                <label>FITNESS GOAL</label>
+                <select
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    marginTop: "8px",
+                    padding: "14px 16px",
+                    background: "#1a1a1a",
+                    border: "1px solid #333",
+                    borderRadius: "10px",
+                    color: "white",
+                    fontSize: "16px",
+                  }}
+                  name="goal"
+                  value={calorieForm.goal}
+                  onChange={handleCalorieChange}
+                >
+                  <option value="lose_weight">Lose Weight</option>
+                  <option value="maintain">Maintain Weight</option>
+                  <option value="gain_weight">Gain Weight</option>
+                  <option value="build_muscle">Build Muscle</option>
+                </select>
+              </div>
+
+              <button
+                className="primary-btn"
+                type="submit"
+                style={{ marginTop: "26px" }}
+              >
+                CALCULATE CALORIES →
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    )}
+
+    {/* ================= TARGET WEIGHT ================= */}
+
+    {showTargetWeight && (
+      <div
+        onClick={() => setShowTargetWeight(false)}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0,0,0,0.75)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9999,
+          padding: "20px",
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            width: "100%",
+            maxWidth: "550px",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            background: "#111",
+            border: "1px solid #333",
+            borderRadius: "20px",
+            padding: "40px",
+            position: "relative",
+            color: "white",
+            boxSizing: "border-box",
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowTargetWeight(false)}
+            style={{
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              background: "transparent",
+              border: "none",
+              color: "white",
+              fontSize: "28px",
+              cursor: "pointer",
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+
+          <p className="section-label">TARGET WEIGHT</p>
+
+          <h2>
+            Set your <span>goal.</span>
+          </h2>
+
+          <p>
+            Set your current weight and target weight to track how
+            close you are to your goal.
+          </p>
+
+          {targetWeightData?.targetWeight ? (
+            <>
+              <div
+                style={{
+                  marginTop: "28px",
+                  padding: "24px",
+                  background: "#181818",
+                  border: "1px solid #333",
+                  borderRadius: "14px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "18px",
+                  }}
+                >
+                  <div>
+                    <span style={{ color: "#888" }}>CURRENT</span>
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: "32px",
+                        marginTop: "6px",
+                      }}
+                    >
+                      {targetWeightData.currentWeight} kg
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span style={{ color: "#888" }}>TARGET</span>
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: "32px",
+                        marginTop: "6px",
+                      }}
+                    >
+                      {targetWeightData.targetWeight} kg
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="secondary-btn"
+                style={{ marginTop: "20px" }}
+                onClick={() => {
+                  setTargetWeightData(null);
+                }}
+              >
+                UPDATE GOAL
+              </button>
+            </>
+          ) : (
+            <form onSubmit={saveTargetWeight} style={{ marginTop: "28px" }}>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "16px",
+                }}
+              >
+                <div className="input-group">
+                  <label>CURRENT WEIGHT (KG)</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    step="0.1"
+                    placeholder="e.g. 75"
+                    value={currentWeight}
+                    onChange={(e) => setCurrentWeight(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="input-group">
+                  <label>TARGET WEIGHT (KG)</label>
+                  <input
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      marginTop: "8px",
+                      padding: "14px 16px",
+                      background: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "10px",
+                      color: "white",
+                      fontSize: "16px",
+                    }}
+                    type="number"
+                    min="1"
+                    step="0.1"
+                    placeholder="e.g. 68"
+                    value={targetWeight}
+                    onChange={(e) => setTargetWeight(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                className="primary-btn"
+                type="submit"
+                disabled={targetWeightLoading}
+                style={{
+                  marginTop: "26px",
+                  opacity: targetWeightLoading ? 0.7 : 1,
+                  cursor: targetWeightLoading
+                    ? "not-allowed"
+                    : "pointer",
+                }}
+              >
+                {targetWeightLoading
+                  ? "SAVING..."
+                  : "SET TARGET →"}
+              </button>
+            </form>
           )}
         </div>
       </div>

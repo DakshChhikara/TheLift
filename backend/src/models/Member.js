@@ -59,6 +59,25 @@ const memberSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    // ================================
+    // WEIGHT / TARGET WEIGHT
+    // ================================
+
+    startingWeight: {
+      type: Number,
+      default: null,
+    },
+
+    currentWeight: {
+      type: Number,
+      default: null,
+    },
+
+    targetWeight: {
+      type: Number,
+      default: null,
+    },
   },
   {
     timestamps: true,
